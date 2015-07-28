@@ -6,7 +6,7 @@ exclude: ["README.md"] # files to exclude
 highlighter: pygments
 markdown: kramdown
 disqus: Daniel
-google_analytics: Daniel
+google_analytics: Write The Code , Change The World! 
 
 defaults:
   -
@@ -21,7 +21,7 @@ author:
   email: yebin38389029@qq.com
   github: Daniel
   twitter: Daniel
-  bio: Daniel
+  bio: Write The Code , Change The World! 
   email_md5: 726351295ec82e145928582f595aa3aa
 
 rss_path: feed.xml
