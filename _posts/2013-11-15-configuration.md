@@ -1,12 +1,8 @@
 ---
 layout: post
-title: Configuration
-categories: [general, setup, demo]
-tags: [demo, dbyll, dbtek, setup]
+title: 第一篇博客！
 fullview: true
 ---
-
-In your config file change these settings
 
 {% highlight yaml %}
 title: Daniel
@@ -15,6 +11,5 @@ author:
   email: yebin38389029@qq.com  
   github: kekeye  
   resume: kekeye  
-  bio: Write The Code , Change The World!  
-  email_md5: md5ofemail  
+  bio: "Write The Code Change The World! "  
 {% endhighlight %}
