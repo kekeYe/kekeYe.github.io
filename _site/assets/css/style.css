@@ -23,7 +23,7 @@ body{
 
 .sidebar-header .title a{
 	text-decoration: none;
-	color: #fff;
+	color: #aaa;
 }
 
 a.nav-link {
@@ -38,7 +38,7 @@ a.nav-link:hover { color: #777 }
 
 #bio {
 	font-family: "Courier New", Courier, monospace;
-	font-size: 11px;
+	font-size: 20px;
 	margin: 0 auto;
 	margin-bottom: 10px;
 }

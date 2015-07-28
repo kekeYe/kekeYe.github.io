@@ -13,19 +13,13 @@ defaults:
     scope:
       path: "" # empty string for all files
     values:
-      title: 叶斌的blog
+      title: 叶斌的iOS Blog
 
-description: Stylish Jekyll Theme
+description: 叶斌的iOS Blog
 author:
   name: Daniel
   email: yebin38389029@qq.com
-  github: Daniel
-  twitter: Daniel
+  github: kekeye
   bio: Write The Code , Change The World! 
-  email_md5: 726351295ec82e145928582f595aa3aa
-
-rss_path: feed.xml
-categories_path: categories.html
-tags_path: tags.html
 
 BASE_PATH:
