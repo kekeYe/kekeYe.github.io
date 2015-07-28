@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title></title>
+		<description>Stylish Jekyll Theme</description>
+		<link>/</link>
+		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+		
+			<item>
+				<title>测试一下</title>
+				<description>&lt;h1 id=&quot;section&quot;&gt;测试第一篇博客&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;以后就在这跟新了&lt;/strong&gt;&lt;/p&gt;
+
+</description>
+				<pubDate>Tue, 28 Jul 2015 00:00:00 +0800</pubDate>
+				<link>/2015/07/28/sample.html</link>
+				<guid isPermaLink="true">/2015/07/28/sample.html</guid>
+			</item>
+		
+			<item>
+				<title>第一篇博客！</title>
+				<description>
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;叶斌&lt;/span&gt;
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;Daniel&lt;/span&gt;  
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;yebin38389029@qq.com&lt;/span&gt;  
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;github&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;kekeye&lt;/span&gt;  
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;resume&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;kekeye&lt;/span&gt;  
+  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;bio&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Write&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;The&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Code&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Change&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;The&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;World!&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+				<pubDate>Tue, 28 Jul 2015 00:00:00 +0800</pubDate>
+				<link>/2015/07/28/configuration.html</link>
+				<guid isPermaLink="true">/2015/07/28/configuration.html</guid>
+			</item>
+		
+	</channel>
+</rss>
