@@ -5,8 +5,7 @@ fullview: true
 ---
 
 {% highlight yaml %}
-title: Daniel
-author:  
+  author:  叶斌
   name: Daniel  
   email: yebin38389029@qq.com  
   github: kekeye  
