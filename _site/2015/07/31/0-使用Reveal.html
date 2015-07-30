@@ -2,9 +2,9 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>学习markdown</title>
+	<title>使用Reveal 帮助你窥视别人的应用</title>
 	
-	<meta name="description" content="学习markdown">
+	<meta name="description" content="使用Reveal 帮助你窥视别人的应用">
 	
 	<meta name="author" content="Daniel">
 
@@ -135,7 +135,7 @@
 
 	<div class="col-sm-9 col-sm-offset-3">
 		<div class="page-header">
-  <h1>学习markdown </h1>
+  <h1>使用Reveal 帮助你窥视别人的应用 </h1>
 </div>
 	
 <article>
@@ -144,229 +144,71 @@
 	 <span class="post-date">
 	   
 	   July 
-	   30th,
-	   
+	   31st,
+	     
 	   2015
 	 </span>
 	  <div class="article_body">
-	  <h1 id="markdown">学习markdown</h1>
+	  <p>今天看到一个微博是虾神的，贴出了一个照片，上面是ios届比较牛逼的前辈，内容是,你要是挖的动，你就牛逼。内容很简单，但是让我心中激荡起了无限涟漪，引用别人的一句话.比我牛逼X倍的人都在努力，你在干什么?<br />
+  回到正题，为了纪录自己的学历历程，坚持做到每天一篇吧。借鉴了那么多前辈们的经验，我想我怎么地也要做做贡献。今天有空看了下Reveal的使用。其实前辈们写的很好，但是可能他们比较高端，写的不够详细，我就啰嗦的写下我是怎么完成的吧。</p>
 
-<p>既然第一篇是如何搭建博客，那么第二篇就写写平时我是如何写博客的吧.</p>
+<p>1.你要有一台真机，并且是越狱过的。我的是ios7.0系统的ipod touch,关于越狱我就不多说了，我记得1年前我用的盘古一键越狱..一键真的很无脑。</p>
 
-<hr />
+<p>2.会使用终端用终端，不会用的话 和我一样使用IfunBox(我比较low)。IfunBox的作用就是把一些文件导入到越狱手机里面去。其实就是要把Reveal里的framework导入到手机里。为啥要用IfunBox？因为手机的文件夹不像电脑.不是一样双击就能访问到.. ps：终端也可以完成，暂时不会，需要越狱。</p>
 
-<p>平时使用的是Markdwon写作，工具是<a href="http://25.io/mou/">Mou</a></p>
+<p>详细一点嘛就是先从<a href="http://revealapp.com">http://revealapp.com</a> 下载Reveal，下载出来应该是酱紫的
+	<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/1.png?raw=true" alt="" /></p>
 
-<p>每次创建好文件</p>
+<p>然后双击运行</p>
 
-<blockquote>
-  <p>2015-7-30-学习Markdown.md</p>
-</blockquote>
+<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/2.png?raw=true" alt="" /></p>
 
-<p>之后就可以开始写作了界面就像这样</p>
+<p>啥也没有的界面，接着我们就要使用ifunBox了。</p>
 
-<hr />
+<p>百度ifunbox for mac 下载 安装。
+<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/3.png?raw=true" alt="" /></p>
 
-<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/destop.png?raw=true" alt="" /></p>
+<p>利用他就可以往手机的文件夹导入东西了。</p>
 
-<hr />
+<p>导入什么呢？当然是把Reveal里面的关键文件导入进去。</p>
 
-<p><strong><em>然后我介绍下重要的Markdown语法吧。我才用一行代码，一行效果的形式，展示常用的语法。</em></strong></p>
+<p>首先进入啥也没有的Reveal</p>
 
-<h1 id="lets-begin"><strong><em>Let’s begin!</em></strong></h1>
+<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/4.png?raw=true" alt="" /></p>
 
-<h2 id="section">1. 标签的用法</h2>
+<p>然后点击红色标签部分 看下我们重要的东西是啥，就是两个文件了</p>
 
-<pre><code># 我是大标题
-</code></pre>
+<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/5.png?raw=true" alt="" /></p>
 
-<h1 id="section-1">我是大标题</h1>
+<p>打开ifunbox
+<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/6.png?raw=true" alt="" /></p>
 
-<pre><code>## 我也是大标题  
-</code></pre>
+<p>这是我手机的文件夹路径，首先把Reveal.framework导入下面标红的路径里面去
+<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/7.png?raw=true" alt="" /></p>
 
-<h2 id="section-2">我也是大标题</h2>
+<p>然后把libReveal.dylib导入</p>
 
-<hr />
+<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/8.png?raw=true" alt="" /></p>
 
-<pre><code># 我是1级标题
-</code></pre>
+<p>然后重启你的手机设备..不要问我怎么重启了…</p>
 
-<h1 id="section-3">我是1级标题</h1>
+<p>再打开你的Reveal就发现
+<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/9.png?raw=true" alt="" /></p>
 
-<h2 id="section-4">我是2级标题</h2>
+<p>这个地方可以点了，进入别人的应用，我选择进入美团</p>
 
-<h3 id="section-5">我是3级标题</h3>
+<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/10.png?raw=true" alt="" /></p>
 
-<h4 id="section-6">我是4级标题</h4>
+<p>这张图是我touch里美团的截图，效果就是这样了。
+<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/12.jpeg?raw=true" alt="" /></p>
 
-<h5 id="section-7">我是5级标题</h5>
+<p>第一次在简书写文章。用我的口头禅就是，我还是个菜鸡，希望大家能够海涵。</p>
 
-<pre><code>###### 我是6级标题
-</code></pre>
+<p>附赠前面提到的图片一张，希望有朝一日你们也能和他们一样被贴在一块。</p>
 
-<h6 id="section-8">我是6级标题</h6>
+<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/13.jpg?raw=true" alt="" /></p>
 
-<h2 id="section-9">2. 黑体斜体的用法以及注释的用法</h2>
-
-<pre><code>文字编辑这里可以是黑体 **我是黑体，还是注释**[^zhushi]. *我是斜体* , 点击小标签可以跳转到下面的解释
-</code></pre>
-
-<p>文字编辑这里可以是黑体 <strong>我是黑体，还是注释</strong><sup id="fnref:zhushi"><a href="#fn:zhushi" class="footnote">1</a></sup>. <em>我是斜体</em> , 点击小标签可以跳转到下面的解释</p>
-
-<h2 id="section-10">3. 引用说明和列表</h2>
-
-<p>下面介绍引用，使用&gt; 可以让文章处于引用状态.列表可以用多种符号，这里用*</p>
-
-<pre><code>&gt; 引用说明
-</code></pre>
-
-<blockquote>
-  <p>引用说明</p>
-</blockquote>
-
-<pre><code>* 列表1
-* * 列表2
-* * * 列表3
-</code></pre>
-
-<ul>
-  <li>列表1</li>
-  <li>
-    <ul>
-      <li>列表2</li>
-    </ul>
-  </li>
-  <li>
-    <ul>
-      <li>
-        <ul>
-          <li>列表3</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
-
-<p>两种结合起来</p>
-
-<pre><code>&gt; **注意了 引用列表开始了:**
-&gt; 
-&gt; * 列表1
-&gt;	* * 列表2
-&gt;	* * * 列表3
-</code></pre>
-
-<blockquote>
-  <p><strong>注意了 引用列表开始了:</strong></p>
-
-  <ul>
-    <li>列表1
-      <ul>
-        <li>
-          <ul>
-            <li>列表2</li>
-          </ul>
-        </li>
-        <li>
-          <ul>
-            <li>
-              <ul>
-                <li>列表3</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</blockquote>
-
-<h2 id="section-11">4. 地址链接和图片链接</h2>
-
-<pre><code>这是[百度](http://www.baidu.com)链接
-</code></pre>
-
-<p>这是<a href="http://www.baidu.com">百度</a>链接</p>
-
-<pre><code>这是图片链接  
-![](http://img3.imgtn.bdimg.com/it/u=1674609539,3404725154&amp;fm=21&amp;gp=0.jpg) 
-</code></pre>
-
-<p>这是图片链接  	
-<img src="http://img3.imgtn.bdimg.com/it/u=1674609539,3404725154&amp;fm=21&amp;gp=0.jpg" alt="" /></p>
-
-<h2 id="section-12">5. 代码高亮</h2>
-
-<p>来一段OC UIKit的代码</p>
-
-<p><code>
-#import &lt;UIKit/UIKitDefines.h&gt;  
-#import &lt;UIKit/UIAccelerometer.h&gt;  
-#import &lt;UIKit/UIAccessibility.h&gt;
-</code></p>
-
-<p>或者</p>
-
-<pre><code>#import &lt;UIKit/UIKitDefines.h&gt;  
-#import &lt;UIKit/UIAccelerometer.h&gt;  
-#import &lt;UIKit/UIAccessibility.h&gt;
-</code></pre>
-
-<p>帮助    <code>Cmd + /</code> <br />
-同步文档    <code>Cmd + S</code><br />
-创建文档    <code>Cmd + Opt + N</code><br />
-最大化编辑器    <code>Cmd + Enter</code><br />
-预览文档 <code>Cmd + Opt + Enter</code></p>
-
-<h2 id="section-13">6.分割线</h2>
-
-<pre><code>------
-</code></pre>
-
-<hr />
-
-<pre><code>***
-</code></pre>
-
-<hr />
-
-<h2 id="section-14">7.我学习的网站，和工具</h2>
-
-<h5 id="markdown-1">markdown在线工具</h5>
-
-<p><a href="https://stackedit.io/editor">https://stackedit.io/editor</a><br />
-<a href="http://typora.io">http://typora.io</a><br />
-<a href="http://joehill.me/2015/07/27/2015-07-27-Markdown-Typora/">http://joehill.me/2015/07/27/2015-07-27-Markdown-Typora/</a><br />
-<a href="http://maxiang.info/#欢迎使用马克飞象">http://maxiang.info/#欢迎使用马克飞象</a></p>
-
-<p><a href="chrome-extension://oknndfeeopgpibecfjljjfanledpbkog/index.html#">chrome-extension://oknndfeeopgpibecfjljjfanledpbkog/index.html#
-</a></p>
-
-<h5 id="markdown-2">markdown语法</h5>
-<p><a href="http://wowubuntu.com/markdown/basic.html">http://wowubuntu.com/markdown/basic.html</a></p>
-
-<p><a href="http://www.ituring.com.cn/article/23">http://www.ituring.com.cn/article/23</a></p>
-
-<p><a href="http://zipperary.com/2013/05/22/introduction-to-markdown/">http://zipperary.com/2013/05/22/introduction-to-markdown/</a></p>
-
-<p><a href="http://www.zhihu.com/question/20962496">http://www.zhihu.com/question/20962496</a></p>
-
-<p><a href="http://www.360doc.com/content/12/0421/09/1016783_205350218.shtml">http://www.360doc.com/content/12/0421/09/1016783_205350218.shtml</a></p>
-
-<h2 id="tips-">8. 小tips 持续跟新</h2>
-
-<p>邮箱：<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#121;&#101;&#098;&#105;&#110;&#051;&#056;&#051;&#056;&#057;&#048;&#050;&#057;&#064;&#113;&#113;&#046;&#099;&#111;&#109;">&#121;&#101;&#098;&#105;&#110;&#051;&#056;&#051;&#056;&#057;&#048;&#050;&#057;&#064;&#113;&#113;&#046;&#099;&#111;&#109;</a></p>
-
-<hr />
-
-<div class="footnotes">
-  <ol>
-    <li id="fn:zhushi">
-      <p><strong>我是解释，解释上面的内容</strong>. <a href="#fnref:zhushi" class="reversefootnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
+<p>如果还是不ok的 可以留言哈 第一次写,比较啰嗦..有问题大家一块解决。</p>
 
 	  </div>
 
@@ -379,7 +221,7 @@
 		<div>
       <section class="share col-sm-6">
         <h4 class="section-title">Share Post</h4>
-        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=学习markdown"
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=使用Reveal 帮助你窥视别人的应用"
            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
           <i class="fa fa-twitter fa-lg"></i>
           Twitter
@@ -407,10 +249,10 @@
 
 		<ul class="pager">
 		  
-		  <li class="previous"><a href="/2015/07/29/how_to_start.html" title="纪录这个Blog是怎么诞生的">&larr; Previous</a></li>
+		  <li class="previous"><a href="/2015/07/30/%E5%AD%A6%E4%B9%A0Markdown.html" title="学习markdown">&larr; Previous</a></li>
 		  
 		  
-		  <li class="next"><a href="/2015/07/31/0-%E4%BD%BF%E7%94%A8Reveal.html" title="使用Reveal 帮助你窥视别人的应用">Next &rarr;</a></li>
+		  <li class="next"><a href="/2015/07/31/%E5%88%A9%E7%94%A8python%E7%88%AC%E5%A6%B9%E5%AD%90%E5%9B%BE.html" title="利用python爬妹子图">Next &rarr;</a></li>
 		  
 		</ul>
 

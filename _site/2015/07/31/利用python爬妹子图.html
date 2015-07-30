@@ -2,9 +2,9 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>使用Reveal 帮助你窥视别人的应用</title>
+	<title>利用python爬妹子图</title>
 	
-	<meta name="description" content="使用Reveal 帮助你窥视别人的应用">
+	<meta name="description" content="利用python爬妹子图">
 	
 	<meta name="author" content="Daniel">
 
@@ -135,7 +135,7 @@
 
 	<div class="col-sm-9 col-sm-offset-3">
 		<div class="page-header">
-  <h1>使用Reveal 帮助你窥视别人的应用 </h1>
+  <h1>利用python爬妹子图 </h1>
 </div>
 	
 <article>
@@ -149,66 +149,41 @@
 	   2015
 	 </span>
 	  <div class="article_body">
-	  <p>今天看到一个微博是虾神的，贴出了一个照片，上面是ios届比较牛逼的前辈，内容是,你要是挖的动，你就牛逼。内容很简单，但是让我心中激荡起了无限涟漪，引用别人的一句话.比我牛逼X倍的人都在努力，你在干什么?<br />
-  回到正题，为了纪录自己的学历历程，坚持做到每天一篇吧。借鉴了那么多前辈们的经验，我想我怎么地也要做做贡献。今天有空看了下Reveal的使用。其实前辈们写的很好，但是可能他们比较高端，写的不够详细，我就啰嗦的写下我是怎么完成的吧。</p>
+	  <p>看了几天的python,发现python的语法确实简单。今天了解了一下python写爬虫，在这里记录一下。</p>
 
-<p>1.你要有一台真机，并且是越狱过的。我的是ios7.0系统的ipod touch,关于越狱我就不多说了，我记得1年前我用的盘古一键越狱..一键真的很无脑。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/528373-eaa6d2e24a60031d.png?imageView2/2/w/1240/q/100" alt="" /></p>
 
-<p>2.会使用终端用终端，不会用的话 和我一样使用IfunBox(我比较low)。IfunBox的作用就是把一些文件导入到越狱手机里面去。其实就是要把Reveal里的framework导入到手机里。为啥要用IfunBox？因为手机的文件夹不像电脑.不是一样双击就能访问到.. ps：终端也可以完成，暂时不会，需要越狱。</p>
+<p>首先 我们要下载pycharm</p>
 
-<p>详细一点嘛就是先从<a href="http://revealapp.com">http://revealapp.com</a> 下载Reveal，下载出来应该是酱紫的
-	<img src="http://upload-images.jianshu.io/upload_images/528373-2e9144ad2077b22d.png?imageView2/2/w/1240/q/100" alt="" /></p>
+<p>http://www.jetbrains.com/</p>
 
-<p>然后双击运行</p>
+<p>然后新建工程</p>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/528373-2005aca85c356486.png?imageView2/2/w/1240/q/100" alt="s" /></p>
+<p>第一种办法
+目录如上 rexx.py 是使用正则表达式的方法  meizi.py是使用BeautifulSoup 三方库来实现解析jpg图片链接(早就听说python的第三库多且牛)</p>
 
-<p>啥也没有的界面，接着我们就要使用ifunBox了。</p>
+<p>正则表达式我在这就不多描述代码如下</p>
 
-<p>百度ifunbox for mac 下载 安装。
-<img src="http://upload-images.jianshu.io/upload_images/528373-bb5c013ce2f39176.png?imageView2/2/w/1240/q/100" alt="" /></p>
+<p>首先里面用到了requests 这个库 。同理我们用时pip install requests安装</p>
 
-<p>利用他就可以往手机的文件夹导入东西了。</p>
+<p>source.txt 是我们把网页源码复制到txt里面解析的（人肉就是 手动操作哈哈！后面会介绍不用自己复制粘贴源码的操作）</p>
 
-<p>导入什么呢？当然是把Reveal里面的关键文件导入进去。</p>
+<p>解析完txt文件 使用正则表达式匹配出我们的图片 最终把他写入文件就可以了</p>
 
-<p>首先进入啥也没有的Reveal</p>
+<p>第二种办法
+在meizi.py文件里面 代码如下</p>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/528373-018885ea4ae558b8.png?imageView2/2/w/1240/q/100" alt="" /></p>
+<p>这里用到了自带的类库 urllib2 以及BeautifulSoup</p>
 
-<p>然后点击红色标签部分 看下我们重要的东西是啥，就是两个文件了</p>
+<p>当然我们可以把代码复制到txt解析然后处理 但是现在我们现在直接urlopen一个链接</p>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/528373-caa57c48e81b089a.png?imageView2/2/w/1240/q/100" alt="" /></p>
+<p>然后使用BeautifulSoup 处理拿到soup</p>
 
-<p>打开ifunbox
-<img src="http://upload-images.jianshu.io/upload_images/528373-568f5703d664119b.png?imageView2/2/w/1240/q/100" alt="" /></p>
+<p>使用soup.findall 就可以解析到想到的数据</p>
 
-<p>这是我手机的文件夹路径，首先把Reveal.framework导入下面标红的路径里面去
-<img src="http://upload-images.jianshu.io/upload_images/528373-f1bcd14efd5fd484.png?imageView2/2/w/1240/q/100" alt="" /></p>
+<p>BeautifulSoup 的功能比较多大家可以自己百度一下</p>
 
-<p>然后把libReveal.dylib导入</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/528373-2017c584f6e04a84.png?imageView2/2/w/1240/q/100" alt="" /></p>
-
-<p>然后重启你的手机设备..不要问我怎么重启了…</p>
-
-<p>再打开你的Reveal就发现
-<img src="http://upload-images.jianshu.io/upload_images/528373-49542403d6d37aa5.png?imageView2/2/w/1240/q/100" alt="" /></p>
-
-<p>这个地方可以点了，进入别人的应用，我选择进入美团</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/528373-5a1e09a92999e87e.png?imageView2/2/w/1240/q/100" alt="" /></p>
-
-<p>这张图是我touch里美团的截图，效果就是这样了。
-<img src="http://upload-images.jianshu.io/upload_images/528373-103ae53765ad65d1.png?imageView2/2/w/1240/q/100" alt="" /></p>
-
-<p>第一次在简书写文章。用我的口头禅就是，我还是个菜鸡，希望大家能够海涵。</p>
-
-<p>附赠前面提到的图片一张，希望有朝一日你们也能和他们一样被贴在一块。</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/528373-93d98918d6f676b7.jpg?imageView2/2/w/1240/q/100" alt="" /></p>
-
-<p>如果还是不ok的 可以留言哈 第一次写,比较啰嗦..有问题大家一块解决。</p>
+<p>这是我随便爬的图片 好玩弄的  我这只是做个备注 可能有点乱 有时间会整理下思路，大家随便看看就好。</p>
 
 	  </div>
 
@@ -221,7 +196,7 @@
 		<div>
       <section class="share col-sm-6">
         <h4 class="section-title">Share Post</h4>
-        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=使用Reveal 帮助你窥视别人的应用"
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=利用python爬妹子图"
            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
           <i class="fa fa-twitter fa-lg"></i>
           Twitter
@@ -249,7 +224,7 @@
 
 		<ul class="pager">
 		  
-		  <li class="previous"><a href="/2015/07/30/%E5%AD%A6%E4%B9%A0Markdown.html" title="学习markdown">&larr; Previous</a></li>
+		  <li class="previous"><a href="/2015/07/31/0-%E4%BD%BF%E7%94%A8Reveal.html" title="使用Reveal 帮助你窥视别人的应用">&larr; Previous</a></li>
 		  
 		  
 			<li class="next disabled"><a>Next &rarr;</a>
