@@ -7,30 +7,258 @@
 		<atom:link href="/" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title>测试一下</title>
-				<description>&lt;h1 id=&quot;section&quot;&gt;测试第一篇博客&lt;/h1&gt;
+				<title>学习markdown</title>
+				<description>&lt;h1 id=&quot;markdown&quot;&gt;学习markdown&lt;/h1&gt;
 
-&lt;p&gt;&lt;strong&gt;以后就在这跟新了&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;既然第一篇是如何搭建博客，那么第二篇就写写平时我是如何写博客的吧.&lt;/p&gt;
 
+&lt;hr /&gt;
+
+&lt;p&gt;平时使用的是Markdwon写作，工具是&lt;a href=&quot;http://25.io/mou/&quot;&gt;Mou&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;每次创建好文件&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;2015-7-30-学习Markdown.md&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;之后就可以开始写作了界面就像这样&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/kekeYe/kekeYe.github.io/tree/master/assets/resources/customimages/destop.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;然后我介绍下重要的Markdown语法吧。我才用一行代码，一行效果的形式，展示常用的语法。&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;lets-begin&quot;&gt;&lt;strong&gt;&lt;em&gt;Let’s begin!&lt;/em&gt;&lt;/strong&gt;&lt;/h1&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;1. 标签的用法&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;# 我是大标题
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&quot;section-1&quot;&gt;我是大标题&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;## 我也是大标题  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;我也是大标题&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;pre&gt;&lt;code&gt;# 我是1级标题
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&quot;section-3&quot;&gt;我是1级标题&lt;/h1&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;我是2级标题&lt;/h2&gt;
+
+&lt;h3 id=&quot;section-5&quot;&gt;我是3级标题&lt;/h3&gt;
+
+&lt;h4 id=&quot;section-6&quot;&gt;我是4级标题&lt;/h4&gt;
+
+&lt;h5 id=&quot;section-7&quot;&gt;我是5级标题&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code&gt;###### 我是6级标题
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h6 id=&quot;section-8&quot;&gt;我是6级标题&lt;/h6&gt;
+
+&lt;h2 id=&quot;section-9&quot;&gt;2. 黑体斜体的用法以及注释的用法&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;文字编辑这里可以是黑体 **我是黑体，还是注释**[^zhushi]. *我是斜体* , 点击小标签可以跳转到下面的解释
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;文字编辑这里可以是黑体 &lt;strong&gt;我是黑体，还是注释&lt;/strong&gt;&lt;sup id=&quot;fnref:zhushi&quot;&gt;&lt;a href=&quot;#fn:zhushi&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;. &lt;em&gt;我是斜体&lt;/em&gt; , 点击小标签可以跳转到下面的解释&lt;/p&gt;
+
+&lt;h2 id=&quot;section-10&quot;&gt;3. 引用说明和列表&lt;/h2&gt;
+
+&lt;p&gt;下面介绍引用，使用&amp;gt; 可以让文章处于引用状态.列表可以用多种符号，这里用*&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; 引用说明
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;引用说明&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;* 列表1
+* * 列表2
+* * * 列表3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;列表1&lt;/li&gt;
+  &lt;li&gt;
+    &lt;ul&gt;
+      &lt;li&gt;列表2&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;ul&gt;
+          &lt;li&gt;列表3&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;两种结合起来&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; **注意了 引用列表开始了:**
+&amp;gt; 
+&amp;gt; * 列表1
+&amp;gt;	* * 列表2
+&amp;gt;	* * * 列表3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;注意了 引用列表开始了:&lt;/strong&gt;&lt;/p&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;列表1
+      &lt;ul&gt;
+        &lt;li&gt;
+          &lt;ul&gt;
+            &lt;li&gt;列表2&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+          &lt;ul&gt;
+            &lt;li&gt;
+              &lt;ul&gt;
+                &lt;li&gt;列表3&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;section-11&quot;&gt;4. 地址链接和图片链接&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;这是[百度](http://www.baidu.com)链接
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是&lt;a href=&quot;http://www.baidu.com&quot;&gt;百度&lt;/a&gt;链接&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;这是图片链接  
+![](http://img3.imgtn.bdimg.com/it/u=1674609539,3404725154&amp;amp;fm=21&amp;amp;gp=0.jpg) 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是图片链接  	
+&lt;img src=&quot;http://img3.imgtn.bdimg.com/it/u=1674609539,3404725154&amp;amp;fm=21&amp;amp;gp=0.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-12&quot;&gt;5. 代码高亮&lt;/h2&gt;
+
+&lt;p&gt;来一段OC UIKit的代码&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+#import &amp;lt;UIKit/UIKitDefines.h&amp;gt;  
+#import &amp;lt;UIKit/UIAccelerometer.h&amp;gt;  
+#import &amp;lt;UIKit/UIAccessibility.h&amp;gt;
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;或者&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#import &amp;lt;UIKit/UIKitDefines.h&amp;gt;  
+#import &amp;lt;UIKit/UIAccelerometer.h&amp;gt;  
+#import &amp;lt;UIKit/UIAccessibility.h&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;帮助    &lt;code&gt;Cmd + /&lt;/code&gt; &lt;br /&gt;
+同步文档    &lt;code&gt;Cmd + S&lt;/code&gt;&lt;br /&gt;
+创建文档    &lt;code&gt;Cmd + Opt + N&lt;/code&gt;&lt;br /&gt;
+最大化编辑器    &lt;code&gt;Cmd + Enter&lt;/code&gt;&lt;br /&gt;
+预览文档 &lt;code&gt;Cmd + Opt + Enter&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-13&quot;&gt;6.分割线&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;------
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;pre&gt;&lt;code&gt;***
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;section-14&quot;&gt;7.我学习的网站，和工具&lt;/h2&gt;
+
+&lt;h5 id=&quot;markdown-1&quot;&gt;markdown在线工具&lt;/h5&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://stackedit.io/editor&quot;&gt;https://stackedit.io/editor&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://typora.io&quot;&gt;http://typora.io&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://joehill.me/2015/07/27/2015-07-27-Markdown-Typora/&quot;&gt;http://joehill.me/2015/07/27/2015-07-27-Markdown-Typora/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://maxiang.info/#欢迎使用马克飞象&quot;&gt;http://maxiang.info/#欢迎使用马克飞象&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;chrome-extension://oknndfeeopgpibecfjljjfanledpbkog/index.html#&quot;&gt;chrome-extension://oknndfeeopgpibecfjljjfanledpbkog/index.html#
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;markdown-2&quot;&gt;markdown语法&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&quot;http://wowubuntu.com/markdown/basic.html&quot;&gt;http://wowubuntu.com/markdown/basic.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.ituring.com.cn/article/23&quot;&gt;http://www.ituring.com.cn/article/23&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://zipperary.com/2013/05/22/introduction-to-markdown/&quot;&gt;http://zipperary.com/2013/05/22/introduction-to-markdown/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.zhihu.com/question/20962496&quot;&gt;http://www.zhihu.com/question/20962496&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.360doc.com/content/12/0421/09/1016783_205350218.shtml&quot;&gt;http://www.360doc.com/content/12/0421/09/1016783_205350218.shtml&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;tips-&quot;&gt;8. 小tips 持续跟新&lt;/h2&gt;
+
+&lt;p&gt;邮箱：&lt;a href=&quot;&amp;#109;&amp;#097;&amp;#105;&amp;#108;&amp;#116;&amp;#111;:&amp;#121;&amp;#101;&amp;#098;&amp;#105;&amp;#110;&amp;#051;&amp;#056;&amp;#051;&amp;#056;&amp;#057;&amp;#048;&amp;#050;&amp;#057;&amp;#064;&amp;#113;&amp;#113;&amp;#046;&amp;#099;&amp;#111;&amp;#109;&quot;&gt;&amp;#121;&amp;#101;&amp;#098;&amp;#105;&amp;#110;&amp;#051;&amp;#056;&amp;#051;&amp;#056;&amp;#057;&amp;#048;&amp;#050;&amp;#057;&amp;#064;&amp;#113;&amp;#113;&amp;#046;&amp;#099;&amp;#111;&amp;#109;&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:zhushi&quot;&gt;
+      &lt;p&gt;&lt;strong&gt;我是解释，解释上面的内容&lt;/strong&gt;. &lt;a href=&quot;#fnref:zhushi&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
 </description>
-				<pubDate>Tue, 28 Jul 2015 00:00:00 +0800</pubDate>
-				<link>/2015/07/28/sample.html</link>
-				<guid isPermaLink="true">/2015/07/28/sample.html</guid>
+				<pubDate>Thu, 30 Jul 2015 00:00:00 +0800</pubDate>
+				<link>/2015/07/30/%E5%AD%A6%E4%B9%A0Markdown.html</link>
+				<guid isPermaLink="true">/2015/07/30/%E5%AD%A6%E4%B9%A0Markdown.html</guid>
 			</item>
 		
 			<item>
-				<title>第一篇博客！</title>
-				<description>
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;叶斌&lt;/span&gt;
-  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;Daniel&lt;/span&gt;  
-  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;yebin38389029@qq.com&lt;/span&gt;  
-  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;github&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;kekeye&lt;/span&gt;  
-  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;resume&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;kekeye&lt;/span&gt;  
-  &lt;span class=&quot;l-Scalar-Plain&quot;&gt;bio&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Write&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;The&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Code&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Change&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;The&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;World!&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+				<title>纪录这个Blog是怎么诞生的</title>
+				<description>&lt;h1 id=&quot;blog&quot;&gt;纪录这个Blog是怎么诞生的&lt;/h1&gt;
+
+&lt;p&gt;大概每个博客的第一篇文章都是这个吧，接触iOS开发两年多了第一次想到写自己的博客,说来惭愧，一开始学别人搭建wordpress，心血来潮的买了个域名，一看到要备案神马的,果断放弃了。接着无意间发现&lt;a href=&quot;http://www.jianshu.com/users/b5709961b8e7/latest_articles&quot;&gt;简书&lt;/a&gt;是个不错的平台，全屏幕白色非常适合我的感觉，写了大概10多篇博客,发现 虽然他是个写博客不错的平台但是感觉还是不够符合我们程序员的style，想来想去还是觉得git更贴切了。废话了那么多,接下来 我就介绍下我是怎么搭建这个博客的吧。我也练习一下&lt;strong&gt;MarkDown&lt;/strong&gt;的各种方法。&lt;/p&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;主要步骤&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;创建自己的github&lt;/li&gt;
+  &lt;li&gt;新建gitpages&lt;/li&gt;
+  &lt;li&gt;下载jekyll 找到符合自己Style的模版&lt;/li&gt;
+  &lt;li&gt;修改模版 让自己看起来&lt;strong&gt;叼叼&lt;/strong&gt;的&lt;/li&gt;
+  &lt;li&gt;clone自己的项目，编写第一篇博客&lt;/li&gt;
+  &lt;li&gt;开始装逼吧！&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;接下来我就按着这个步骤,分别解释下这些操作。&lt;/p&gt;
+
+&lt;p&gt;待跟新..&lt;/p&gt;
+
 </description>
-				<pubDate>Tue, 28 Jul 2015 00:00:00 +0800</pubDate>
-				<link>/2015/07/28/configuration.html</link>
-				<guid isPermaLink="true">/2015/07/28/configuration.html</guid>
+				<pubDate>Wed, 29 Jul 2015 00:00:00 +0800</pubDate>
+				<link>/2015/07/29/how_to_start.html</link>
+				<guid isPermaLink="true">/2015/07/29/how_to_start.html</guid>
 			</item>
 		
 	</channel>
