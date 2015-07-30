@@ -22,7 +22,7 @@ description: 学习markdown
 
 
 
-![image](https://github.com/kekeYe/kekeYe.github.io/tree/master/assets/resources/customimages/destop.png)
+![](https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/destop.png?raw=true)
 
 ***
 
