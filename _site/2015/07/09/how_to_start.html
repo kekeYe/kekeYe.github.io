@@ -2,9 +2,9 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>使用Reveal 帮助你窥视别人的应用</title>
+	<title>纪录这个Blog是怎么诞生的</title>
 	
-	<meta name="description" content="使用Reveal 帮助你窥视别人的应用">
+	<meta name="description" content="纪录这个Blog是怎么诞生的">
 	
 	<meta name="author" content="Daniel">
 
@@ -135,7 +135,7 @@
 
 	<div class="col-sm-9 col-sm-offset-3">
 		<div class="page-header">
-  <h1>使用Reveal 帮助你窥视别人的应用 </h1>
+  <h1>纪录这个Blog是怎么诞生的 </h1>
 </div>
 	
 <article>
@@ -144,71 +144,32 @@
 	 <span class="post-date">
 	   
 	   July 
-	   30th,
+	   9th,
 	   
 	   2015
 	 </span>
 	  <div class="article_body">
-	  <p>今天看到一个微博是虾神的，贴出了一个照片，上面是ios届比较牛逼的前辈，内容是,你要是挖的动，你就牛逼。内容很简单，但是让我心中激荡起了无限涟漪，引用别人的一句话.比我牛逼X倍的人都在努力，你在干什么?<br />
-  回到正题，为了纪录自己的学历历程，坚持做到每天一篇吧。借鉴了那么多前辈们的经验，我想我怎么地也要做做贡献。今天有空看了下Reveal的使用。其实前辈们写的很好，但是可能他们比较高端，写的不够详细，我就啰嗦的写下我是怎么完成的吧。</p>
+	  <h1 id="blog">纪录这个Blog是怎么诞生的</h1>
 
-<p>1.你要有一台真机，并且是越狱过的。我的是ios7.0系统的ipod touch,关于越狱我就不多说了，我记得1年前我用的盘古一键越狱..一键真的很无脑。</p>
+<p>大概每个博客的第一篇文章都是这个吧，接触iOS开发两年多了第一次想到写自己的博客,说来惭愧，一开始学别人搭建wordpress，心血来潮的买了个域名，一看到要备案神马的,果断放弃了。接着无意间发现<a href="http://www.jianshu.com/users/b5709961b8e7/latest_articles">简书</a>是个不错的平台，全屏幕白色非常适合我的感觉，写了大概10多篇博客,发现 虽然他是个写博客不错的平台但是感觉还是不够符合我们程序员的style，想来想去还是觉得git更贴切了。废话了那么多,接下来 我就介绍下我是怎么搭建这个博客的吧。我也练习一下<strong>MarkDown</strong>的各种方法。</p>
 
-<p>2.会使用终端用终端，不会用的话 和我一样使用IfunBox(我比较low)。IfunBox的作用就是把一些文件导入到越狱手机里面去。其实就是要把Reveal里的framework导入到手机里。为啥要用IfunBox？因为手机的文件夹不像电脑.不是一样双击就能访问到.. ps：终端也可以完成，暂时不会，需要越狱。</p>
+<h3 id="section">主要步骤</h3>
 
-<p>详细一点嘛就是先从<a href="http://revealapp.com">http://revealapp.com</a> 下载Reveal，下载出来应该是酱紫的
-	<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/1.png?raw=true" alt="" /></p>
+<ol>
+  <li>创建自己的github</li>
+  <li>新建gitpages</li>
+  <li>下载jekyll 找到符合自己Style的模版</li>
+  <li>修改模版 让自己看起来<strong>叼叼</strong>的</li>
+  <li>clone自己的项目，编写第一篇博客</li>
+  <li>开始装逼吧！</li>
+</ol>
 
-<p>然后双击运行</p>
+<hr />
 
-<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/2.png?raw=true" alt="" /></p>
+<p>接下来我就按着这个步骤,分别解释下这些操作。</p>
 
-<p>啥也没有的界面，接着我们就要使用ifunBox了。</p>
+<p>待跟新..</p>
 
-<p>百度ifunbox for mac 下载 安装。
-<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/3.png?raw=true" alt="" /></p>
-
-<p>利用他就可以往手机的文件夹导入东西了。</p>
-
-<p>导入什么呢？当然是把Reveal里面的关键文件导入进去。</p>
-
-<p>首先进入啥也没有的Reveal</p>
-
-<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/4.png?raw=true" alt="" /></p>
-
-<p>然后点击红色标签部分 看下我们重要的东西是啥，就是两个文件了</p>
-
-<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/5.png?raw=true" alt="" /></p>
-
-<p>打开ifunbox
-<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/6.png?raw=true" alt="" /></p>
-
-<p>这是我手机的文件夹路径，首先把Reveal.framework导入下面标红的路径里面去
-<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/7.png?raw=true" alt="" /></p>
-
-<p>然后把libReveal.dylib导入</p>
-
-<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/8.png?raw=true" alt="" /></p>
-
-<p>然后重启你的手机设备..不要问我怎么重启了…</p>
-
-<p>再打开你的Reveal就发现
-<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/9.png?raw=true" alt="" /></p>
-
-<p>这个地方可以点了，进入别人的应用，我选择进入美团</p>
-
-<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/10.png?raw=true" alt="" /></p>
-
-<p>这张图是我touch里美团的截图，效果就是这样了。
-<img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/12.jpeg?raw=true" alt="" /></p>
-
-<p>第一次在简书写文章。用我的口头禅就是，我还是个菜鸡，希望大家能够海涵。</p>
-
-<p>附赠前面提到的图片一张，希望有朝一日你们也能和他们一样被贴在一块。</p>
-
-<p><img src="https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015_7_30_reveal/13.jpg?raw=true" alt="" /></p>
-
-<p>如果还是不ok的 可以留言哈 第一次写,比较啰嗦..有问题大家一块解决。</p>
 
 	  </div>
 
@@ -221,7 +182,7 @@
 		<div>
       <section class="share col-sm-6">
         <h4 class="section-title">Share Post</h4>
-        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=使用Reveal 帮助你窥视别人的应用"
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=纪录这个Blog是怎么诞生的"
            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
           <i class="fa fa-twitter fa-lg"></i>
           Twitter
@@ -249,10 +210,10 @@
 
 		<ul class="pager">
 		  
-		  <li class="previous"><a href="/2015/07/30/0%E5%AD%A6%E4%B9%A0Markdown.html" title="学习markdown">&larr; Previous</a></li>
+		  <li class="previous disabled"><a>&larr; Previous</a></li>
 		  
 		  
-		  <li class="next"><a href="/2015/07/30/2%E5%88%A9%E7%94%A8python%E7%88%AC%E5%A6%B9%E5%AD%90%E5%9B%BE.html" title="利用python爬妹子图">Next &rarr;</a></li>
+		  <li class="next"><a href="/2015/07/10/0%E5%AD%A6%E4%B9%A0Markdown.html" title="学习markdown">Next &rarr;</a></li>
 		  
 		</ul>
 
