@@ -78,20 +78,20 @@ NSLog(@”Lauched in %f seconds.”,  (CFAbsoluteTimeGetCurrent() – StartTime)
 
 &lt;p&gt;工具Leaks可以在应用运行时直接标示出存在内存泄露的代码，如果发生了内存泄露，可以从泄露详细信息中查看泄露的具体对象以及方法调用栈，大部分问题还是很好解决的。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://www.hrchen.com/content/images/2015/04/leak.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015-7_13_app/5.png?raw=true&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;section-3&quot;&gt;图形和动画&lt;/h2&gt;
 &lt;p&gt;图形性能对用户体验有直接的影响，Instruments中的Core Animation工具用于测量物理机上的图形性能，通过视图的刷新频率大小来判断应用的图形性能。例如一个复杂的列表滚动时它的刷新率应该努力趋近于60fps才能让用户觉得够流畅，从这个数字也可以算出run loop最长的响应时间应该是16毫秒。&lt;/p&gt;
 
 &lt;p&gt;启动Instruments的Core Animation工具后可以发现左下部分有一堆选项，我们来逐个介绍：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://www.hrchen.com/content/images/2015/04/core_animation.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015-7_13_app/6.png?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;1) Color Blended Layers&lt;/p&gt;
 
 &lt;p&gt;Instruments可以在物理机上显示出被混合的图层Blended Layer(用红色标注)，Blended Layer是因为这些Layer是透明的(Transparent)，系统在渲染这些view时需要将该view和下层view混合(Blend)后才能计算出该像素点的实际颜色，如果这种blended layer很多，那么在滚动列表时就甭想有流畅的效果。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://www.hrchen.com/content/images/2015/04/color_blended_layer.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015-7_13_app/7.png?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;解决blended layer问题也很简单，检查红色区域view的opaque属性，记得设置成YES；检查backgroundColor属性是不是[UIColor clearColor]，要知道背景颜色为clear color那可是图形性能的大敌，基本意味着blended layer是跑不了的了，为什么？自己思考一下:)&lt;/p&gt;
 
@@ -105,7 +105,7 @@ NSLog(@”Lauched in %f seconds.”,  (CFAbsoluteTimeGetCurrent() – StartTime)
 
 &lt;p&gt;Misaligned Image表示要绘制的点无法直接映射到频幕上的像素点，此时系统需要对相邻的像素点做anti-aliasing反锯齿计算，增加了图形负担，通常这种问题出在对某些View的Frame重新计算和设置时产生的。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://www.hrchen.com/content/images/2015/04/color_misaligned_image.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015-7_13_app/8.png?raw=true&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;上图中被标注为黄色的图层，这是由于图层显示的是被缩放后的图片，如果这些图片是通过网络下载的，可以通过程序更新为确定的绘制大小来解决。还有些系统Navigation Bar和Tool Bar的背景图片使用的是拉伸(Streched)图片，也会被表示为黄色，这是属于正常情况，通常无需修改。这种问题一般对性能影响不大，而是可能会在边缘处虚化。&lt;/p&gt;
 
@@ -147,11 +147,11 @@ Color OpenGL Fast Path Blue选项用于用蓝色标示出在屏幕上由OpenGL c
 &lt;p&gt;工具System Usage可以统计出运行状态下应用的文件和网络IO操作数据。例如我们发现应用启动后又一个峰值，这可能存在问题，我们可以利用System Usage工具的详细信息栏查看应用是由于对哪些文件的读写操作导致了峰值。&lt;/p&gt;
 
 &lt;p&gt;工具File Activity只能在模拟器中运行，因此数据采集可能不是非常准确。它同样可以详细给出读取的文件属性、大小、载入时间等信息，适合与System Usage配合使用。
-&lt;img src=&quot;http://www.hrchen.com/content/images/2015/04/file_activity.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015-7_13_app/9.png?raw=true&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Network工具则可以采集到应用的TCP/IP和UDP的使用信息(传输的数据量、当前所有TCP连接等)，用得不多，做网络使用状况分析时用用还行。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://www.hrchen.com/content/images/2015/04/instruments_networking.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/kekeYe/kekeYe.github.io/blob/master/assets/resources/customimages/2015-7_13_app/10.png?raw=true&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;更多阅读
 涉及iOS App性能的知识很多，上面只是冰山一角，重点推荐WWDC的session。&lt;/p&gt;
