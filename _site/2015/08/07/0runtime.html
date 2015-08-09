@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>runtime</title>
+	
+	<meta name="description" content="runtime">
+	
+	<meta name="author" content="Daniel">
+
+	<!-- Enable responsive viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Le styles -->
+	<link href="/assets/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/assets/resources/syntax/syntax.css" rel="stylesheet">
+	<link href="/assets/css/style.css" rel="stylesheet">
+
+	<!-- Le fav and touch icons -->
+	<!-- Update these with your own images
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+	-->
+
+	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
+</head>
+
+<body>
+	<nav class="navbar navbar-default visible-xs" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			
+			<a type="button" class="navbar-toggle nav-link" href="http://github.com/kekeye">
+				<i class="fa fa-github"></i>
+			</a>
+			
+			
+			
+			<a type="button" class="navbar-toggle nav-link" href="mailto:yebin38389029@qq.com">
+				<i class="fa fa-envelope"></i>
+			</a>
+			
+			<a class="navbar-brand" href="/">
+				<img src="http://www.gravatar.com/avatar/?s=35" class="img-circle" />
+				
+			</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="/">Home</a></li>
+				<li><a href="/">Categories</a></li>
+				<li><a href="/">Tags</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</nav>
+
+	<!-- nav-menu-dropdown -->
+	<div class="btn-group hidden-xs" id="nav-menu">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<i class="fa fa-bars"></i>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+			<li><a href="/"><i class="fa fa-folder"></i>Categories</a></li>
+			<li><a href="/"><i class="fa fa-tags"></i>Tags</a></li>
+			<li class="divider"></li>
+			<li><a href="#"><i class="fa fa-arrow-up"></i>Top of Page</a></li>
+		</ul>
+	</div>
+
+	<div class="col-sm-3 sidebar hidden-xs">
+		<!-- sidebar.html -->
+<header class="sidebar-header" role="banner">
+	<a href="/">
+		<img src="http://kekeye.github.io/assets/resources/customimages/yebin.jpeg" class="img-circle" />
+	</a>
+	<h3 class="title">
+        <a href="/"></a>
+    </h3>
+</header>
+
+
+<div id="bio" class="text-center">
+	Write The Code , Change The World!
+</div>
+
+
+<div id="contact-list" class="text-center">
+	<ul class="list-unstyled list-inline">
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="https://github.com/kekeye">
+				<i class="fa fa-github-alt fa-lg"></i>
+			</a>
+		</li>
+		
+		
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="mailto:yebin38389029@qq.com">
+				<i class="fa fa-envelope fa-lg"></i>
+			</a>
+		</li>
+		
+	</ul>
+	<ul id="contact-list-secondary" class="list-unstyled list-inline">
+		
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="/">
+				<i class="fa fa-rss fa-lg"></i>
+			</a>
+		</li>
+	</ul>
+</div>
+<!-- sidebar.html end -->
+
+	</div>
+
+	<div class="col-sm-9 col-sm-offset-3">
+		<div class="page-header">
+  <h1>runtime </h1>
+</div>
+	
+<article>
+
+	<div class="col-sm-10">
+	 <span class="post-date">
+	   
+	   August 
+	   7th,
+	   
+	   2015
+	 </span>
+	  <div class="article_body">
+	  <h1 id="runtime">runtime</h1>
+<p>Objective-C是基于C语言加入了面向对象特性和消息转发机制的动态语言，这意味着它不仅需要一个编译器，还需要Runtime系统来动态创建类和对象，进行消息发送和转发。下面通过分析Apple开源的Runtime代码来深入理解Objective-C的Runtime机制。</p>
+
+<p>Runtime数据结构
+在Objective-C中，使用<code>[receiver message]</code>语法并不会马上执行<code>receiver</code>对象的<code>message</code>方法的代码，而是向<code>receiver</code>发送一条<code>message</code>消息，这条消息可能由<code>receiver</code>来处理，也可能由转发给其他对象来处理，也有可能假装没有接收到这条消息而没有处理。其实<code>[receiver message]</code>被编译器转化为:</p>
+
+<pre><code>id objc_msgSend ( id self, SEL op, ... );
+</code></pre>
+
+<p>下面从两个数据结构<code>id</code>和<code>SEL</code>来逐步分析和理解Runtime有哪些重要的数据结构。</p>
+
+<h2 id="sel">SEL</h2>
+<p><code>SEL</code>是函数<code>objc_msgSend</code>第二个参数的数据类型，表示方法选择器，按下面路径打开<code>objc.h</code>文件</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/166109-73bc4103f4b4e671.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image" />
+***
+	SEL Data Structure</p>
+
+<p>查看到SEL数据结构如下:</p>
+
+<pre><code>typedef struct objc_selector *SEL;
+</code></pre>
+
+<p>其实它就是映射到方法的C字符串，你可以通过Objc编译器命令<code>@selector()</code>或者<code>Runtime</code>系统的<code>sel_registerName</code>函数来获取一个<code>SEL</code>类型的方法选择器。
+如果你知道<code>selector</code>对应的方法名是什么，可以通过<code>NSString* NSStringFromSelector(SEL aSelector)</code>方法将<code>SEL</code>转化为字符串，再用<code>NSLog</code>打印。</p>
+
+<h2 id="id">id</h2>
+<p>接下来看<code>objc_msgSend</code>第一个参数的数据类型<code>id</code>，<code>id</code>是通用类型指针，能够表示任何对象。按下面路径打开<code>objc.h</code>文件</p>
+
+<p>id Data Structure.png
+查看到id数据结构如下：</p>
+
+<pre><code>/// Represents an instance of a class.
+struct objc_object {
+Class isa  OBJC_ISA_AVAILABILITY;
+};
+
+/// A pointer to an instance of a class.
+typedef struct objc_object *id;
+</code></pre>
+
+<p><code>id</code>其实就是一个指向<code>objc_object</code>结构体指针，它包含一个<code>Class isa</code>成员，根据<code>isa</code>指针就可以顺藤摸瓜找到对象所属的类。</p>
+
+<blockquote>
+  <p>注意：根据Apple的官方文档<code>Key-Value Observing Implementation Details</code>提及，<code>key-value observing</code>是使用<code>isa-swizzling</code>的技术实现的，isa指针在运行时被修改，指向一个中间类而不是真正的类。所以，你不应该使用isa指针来确定类的关系，而是使用class方法来确定实例对象的类。</p>
+</blockquote>
+
+<h2 id="class">Class</h2>
+<p><code>isa</code>指针的数据类型是Class，Class表示对象所属的类，按下面路径打开<code>objc.h</code>文件</p>
+
+<pre><code>Class Data Structure
+/// An opaque type that represents an Objective-C class.
+typedef struct objc_class *Class; 可以查看到Class其实就是一个`objc_class`结构体指针，但这个头文件找不到它的定义，需要在`runtime.h`才能找到`objc_class`结构体的定义。
+</code></pre>
+
+<p>按下面路径打开runtime.h文件</p>
+
+<p>objc_class Data Structure
+查看到<code>objc_class</code>结构体定义如下：</p>
+
+<pre><code>struct objc_class {
+Class isa  OBJC_ISA_AVAILABILITY;
+
+#if !__OBJC2__
+Class super_class                                        OBJC2_UNAVAILABLE;
+const char *name                                         OBJC2_UNAVAILABLE;
+long version                                             OBJC2_UNAVAILABLE;
+long info                                                OBJC2_UNAVAILABLE;
+long instance_size                                       OBJC2_UNAVAILABLE;
+struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;
+struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;
+struct objc_cache *cache                                 OBJC2_UNAVAILABLE;
+struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
+#endif
+} OBJC2_UNAVAILABLE;
+/* Use `Class` instead of `struct objc_class *` */
+</code></pre>
+
+<blockquote>
+  <p>注意：OBJC2_UNAVAILABLE是一个Apple对Objc系统运行版本进行约束的宏定义，主要为了兼容非Objective-C 2.0的遗留版本，但我们仍能从中获取一些有用信息。</p>
+</blockquote>
+
+<p>让我们分析一些重要的成员变量表示什么意思和对应使用哪些数据结构。</p>
+
+<ul>
+  <li>
+    <p>isa表示一个Class对象的Class，也就是Meta Class。在面向对象设计中，一切都是对象，Class在设计中本身也是一个对象。我们会在objc-runtime-new.h文件找到证据，发现objc_class有以下定义：</p>
+
+    <p>struct objc_class : objc_object {<br />
+  // Class ISA;<br />
+Class superclass;<br />
+cache_t cache;             // formerly cache pointer and vtable<br />
+class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags<br />
+……<br />
+}`</p>
+  </li>
+</ul>
+
+<p>由此可见，结构体<code>objc_class</code>也是继承<code>objc_object</code>，说明Class在设计中本身也是一个对象。</p>
+
+<p>其实Meta Class也是一个Class，那么它也跟其他Class一样有自己的isa和super_class指针，关系如下：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/166109-fb22b2cd2fe17745.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image" /></p>
+
+<p>Class isa and superclass relationship from Google
+上图实线是super_class指针，虚线是isa指针。有几个关键点需要解释以下:</p>
+
+<ul>
+  <li>Root class (class)其实就是NSObject，NSObject是没有超类的，所以Root class(class)的superclass指向nil。</li>
+  <li>每个Class都有一个isa指针指向唯一的Meta class</li>
+  <li>Root class(meta)的superclass指向Root class(class)，也就是NSObject，形成一个回路。</li>
+  <li>每个Meta class的isa指针都指向Root class (meta)。</li>
+  <li>super_class表示实例对象对应的父类</li>
+  <li>name表示类名</li>
+  <li>
+    <p>ivars表示多个成员变量，它指向objc_ivar_list结构体。在runtime.h可以看到它的定义：</p>
+
+    <pre><code>  struct objc_ivar_list {  
+  int ivar_count                                           		OBJC2_UNAVAILABLE;  
+  #ifdef __LP64__  
+  int space                                                			OBJC2_UNAVAILABLE;  
+      #endif  
+  /* variable length structure */    
+  struct objc_ivar ivar_list[1]  
+  OBJC2_UNAVAILABLE;  
+  } `objc_ivar_list`其实就是一个链表，存储多个`objc_ivar`，而`objc_ivar`结构体存储类的单个成员变量信息。
+</code></pre>
+  </li>
+</ul>
+
+<p>methodLists表示方法列表，它指向objc_method_list结构体的二级指针，可以动态修改*methodLists的值来添加成员方法，也是Category实现原理，同样也解释Category不能添加实例变量的原因。在runtime.h可以看到它的定义：</p>
+
+<pre><code>	struct objc_method_list {
+  				struct objc_method_list *obsolete                        				OBJC2_UNAVAILABLE;
+</code></pre>
+
+ 				 int method_count                                         				OBJC2_UNAVAILABLE;
+<pre><code>			#ifdef __LP64__
+  				int space                                                				OBJC2_UNAVAILABLE;
+			#endif   /* variable length structure */   struct objc_method method_list[1]                        OBJC2_UNAVAILABLE; }` 同理，objc_method_list也是一个链表，存储多个objc_method，而objc_method结构体存储类的某个方法的信息。
+</code></pre>
+
+<p>cache用来缓存经常访问的方法，它指向objc_cache结构体，后面会重点讲到。</p>
+
+<p>protocols表示类遵循哪些协议
+Method
+Method表示类中的某个方法，在runtime.h文件中找到它的定义：</p>
+
+<p>/// An opaque type that represents a method in a class definition.
+typedef struct objc_method *Method;</p>
+
+<p>struct objc_method {
+    SEL method_name                                          OBJC2_UNAVAILABLE;
+    char *method_types                                       OBJC2_UNAVAILABLE;
+    IMP method_imp                                           OBJC2_UNAVAILABLE;
+}
+其实Method就是一个指向objc_method结构体指针，它存储了方法名(method_name)、方法类型(method_types)和方法实现(method_imp)等信息。而method_imp的数据类型是IMP，它是一个函数指针，后面会重点提及。</p>
+
+<p>Ivar
+Ivar表示类中的实例变量，在runtime.h文件中找到它的定义：</p>
+
+<p>/// An opaque type that represents an instance variable.
+typedef struct objc_ivar *Ivar;</p>
+
+<p>struct objc_ivar {
+    char *ivar_name                                          OBJC2_UNAVAILABLE;
+    char *ivar_type                                          OBJC2_UNAVAILABLE;
+    int ivar_offset                                          OBJC2_UNAVAILABLE;
+#ifdef <strong>LP64</strong>
+    int space                                                OBJC2_UNAVAILABLE;
+#endif
+}
+Ivar其实就是一个指向objc_ivar结构体指针，它包含了变量名(ivar_name)、变量类型(ivar_type)等信息。</p>
+
+<p>IMP
+在上面讲Method时就说过，IMP本质上就是一个函数指针，指向方法的实现，在objc.h找到它的定义：</p>
+
+<p>/// A pointer to the function of a method implementation. 
+#if !OBJC_OLD_DISPATCH_PROTOTYPES
+typedef void (<em>IMP)(void /</em> id, SEL, … <em>/ ); 
+#else
+typedef id (</em>IMP)(id, SEL, …); 
+#endif
+当你向某个对象发送一条信息，可以由这个函数指针来指定方法的实现，它最终就会执行那段代码，这样可以绕开消息传递阶段而去执行另一个方法实现。</p>
+
+<p>Cache
+顾名思义，Cache主要用来缓存，那它缓存什么呢？我们先在runtime.h文件看看它的定义：</p>
+
+<p>typedef struct objc_cache *Cache                             OBJC2_UNAVAILABLE;</p>
+
+<p>struct objc_cache {
+    unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
+    unsigned int occupied                                    OBJC2_UNAVAILABLE;
+    Method buckets[1]                                        OBJC2_UNAVAILABLE;
+};
+Cache其实就是一个存储Method的链表，主要是为了优化方法调用的性能。当对象receiver调用方法message时，首先根据对象receiver的isa指针查找到它对应的类，然后在类的methodLists中搜索方法，如果没有找到，就使用super_class指针到父类中的methodLists查找，一旦找到就调用方法。如果没有找到，有可能消息转发，也可能忽略它。但这样查找方式效率太低，因为往往一个类大概只有20%的方法经常被调用，占总调用次数的80%。所以使用Cache来缓存经常调用的方法，当调用方法时，优先在Cache查找，如果没有找到，再到methodLists查找。</p>
+
+<p>消息发送
+前面从objc_msgSend作为入口，逐步深入分析Runtime的数据结构，了解每个数据结构的作用和它们之间关系后，我们正式转入消息发送这个正题。</p>
+
+<p>objc_msgSend函数
+在前面已经提过，当某个对象使用语法[receiver message]来调用某个方法时，其实[receiver message]被编译器转化为:</p>
+
+<p>id objc_msgSend ( id self, SEL op, … );
+现在让我们看一下objc_msgSend它具体是如何发送消息:</p>
+
+<p>首先根据receiver对象的isa指针获取它对应的class
+优先在class的cache查找message方法，如果找不到，再到methodLists查找
+如果没有在class找到，再到super_class查找
+一旦找到message这个方法，就执行它实现的IMP。</p>
+
+<p>Objc Message.gif
+self与super
+为了让大家更好地理解self和super，借用sunnyxx博客的ios程序员6级考试一道题目：下面的代码分别输出什么？</p>
+
+<p>@implementation Son : Father
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        NSLog(@”%@”, NSStringFromClass([self class]));
+        NSLog(@”%@”, NSStringFromClass([super class]));
+    }
+    return self;
+}
+@end
+self表示当前这个类的对象，而super是一个编译器标示符，和self指向同一个消息接受者。在本例中，无论是[self class]还是[super class]，接受消息者都是Son对象，但super与self不同的是，self调用class方法时，是在子类Son中查找方法，而super调用class方法时，是在父类Father中查找方法。</p>
+
+<p>当调用[self class]方法时，会转化为objc_msgSend函数，这个函数定义如下：</p>
+
+<p>id objc_msgSend(id self, SEL op, …)
+这时会从当前Son类的方法列表中查找，如果没有，就到Father类查找，还是没有，最后在NSObject类查找到。我们可以从NSObject.mm文件中看到- (Class)class的实现：</p>
+
+<ul>
+  <li>(Class)class {
+  return object_getClass(self);
+}
+所以NSLog(@”%@”, NSStringFromClass([self class]));会输出Son。</li>
+</ul>
+
+<p>当调用[super class]方法时，会转化为objc_msgSendSuper，这个函数定义如下：</p>
+
+<p>id objc_msgSendSuper(struct objc_super *super, SEL op, …)
+objc_msgSendSuper函数第一个参数super的数据类型是一个指向objc_super的结构体，从message.h文件中查看它的定义：</p>
+
+<p>/// Specifies the superclass of an instance. 
+struct objc_super {
+    /// Specifies an instance of a class.
+    __unsafe_unretained id receiver;</p>
+
+<pre><code>/// Specifies the particular superclass of the instance to message.  #if !defined(__cplusplus)  &amp;&amp;  !__OBJC2__
+/* For compatibility with old objc-runtime.h header */
+__unsafe_unretained Class class; #else
+__unsafe_unretained Class super_class; #endif
+/* super_class is the first class to search */ }; #endif 结构体包含两个成员，第一个是receiver，表示某个类的实例。第二个是super_class表示当前类的父类。
+</code></pre>
+
+<p>这时首先会构造出objc_super结构体，这个结构体第一个成员是self，第二个成员是(id)class_getSuperclass(objc_getClass(“Son”))，实际上该函数会输出Father。然后在Father类查找class方法，查找不到，最后在NSObject查到。此时，内部使用objc_msgSend(objc_super-&gt;receiver, @selector(class))去调用，与[self class]调用相同，所以结果还是Son。</p>
+
+<p>隐藏参数self和_cmd
+当[receiver message]调用方法时，系统会在运行时偷偷地动态传入两个隐藏参数self和_cmd，之所以称它们为隐藏参数，是因为在源代码中没有声明和定义这两个参数。至于对于self的描述，上面已经解释非常清楚了，下面我们重点讲解_cmd。</p>
+
+<p>_cmd表示当前调用方法，其实它就是一个方法选择器SEL。一般用于判断方法名或在Associated Objects中唯一标识键名，后面在Associated Objects会讲到。</p>
+
+<p>方法解析与消息转发
+[receiver message]调用方法时，如果在message方法在receiver对象的类继承体系中没有找到方法，那怎么办？一般情况下，程序在运行时就会Crash掉，抛出 unrecognized selector sent to …类似这样的异常信息。但在抛出异常之前，还有三次机会按以下顺序让你拯救程序。</p>
+
+<p>Method Resolution
+Fast Forwarding
+Normal Forwarding</p>
+
+<p>Message Forward from Google
+Method Resolution
+首先Objective-C在运行时调用+ resolveInstanceMethod:或+ resolveClassMethod:方法，让你添加方法的实现。如果你添加方法并返回YES，那系统在运行时就会重新启动一次消息发送的过程。</p>
+
+<p>举一个简单例子，定义一个类Message，它主要定义一个方法sendMessage，下面就是它的设计与实现：</p>
+
+<p>@interface Message : NSObject</p>
+
+<ul>
+  <li>(void)sendMessage:(NSString *)word;</li>
+</ul>
+
+<p>@end
+@implementation Message</p>
+
+<ul>
+  <li>(void)sendMessage:(NSString *)word
+{
+  NSLog(@”normal way : send message = %@”, word);
+}</li>
+</ul>
+
+<p>@end
+如果我在viewDidLoad方法中创建Message对象并调用sendMessage方法：</p>
+
+<ul>
+  <li>
+    <p>(void)viewDidLoad {
+  [super viewDidLoad];</p>
+
+    <p>Message *message = [Message new];
+  [message sendMessage:@”Sam Lau”];
+}
+控制台会打印以下信息:</p>
+  </li>
+</ul>
+
+<p>normal way : send message = Sam Lau
+但现在我将原来sendMessage方法实现给注释掉，覆盖resolveInstanceMethod方法：</p>
+
+<h1 id="pragma-mark---method-resolution">pragma mark - Method Resolution</h1>
+
+<p>/// override resolveInstanceMethod or resolveClassMethod for changing sendMessage method implementation
++ (BOOL)resolveInstanceMethod:(SEL)sel
+{
+    if (sel == @selector(sendMessage:)) {
+        class_addMethod([self class], sel, imp_implementationWithBlock(^(id self, NSString <em>word) {
+            NSLog(@”method resolution way : send message = %@”, word);
+        }), “v@</em>”);
+    }</p>
+
+<pre><code>return YES; } 控制台就会打印以下信息：
+</code></pre>
+
+<p>method resolution way : send message = Sam Lau
+注意到上面代码有这样一个字符串”v@*，它表示方法的参数和返回值，详情请参考Type Encodings</p>
+
+<p>如果resolveInstanceMethod方法返回NO，运行时就跳转到下一步：消息转发(Message Forwarding)</p>
+
+<p>Fast Forwarding
+如果目标对象实现- forwardingTargetForSelector:方法，系统就会在运行时调用这个方法，只要这个方法返回的不是nil或self，也会重启消息发送的过程，把这消息转发给其他对象来处理。否则，就会继续Normal Fowarding。</p>
+
+<p>继续上面Message类的例子，将sendMessage和resolveInstanceMethod方法注释掉，然后添加forwardingTargetForSelector方法的实现：</p>
+
+<h1 id="pragma-mark---fast-forwarding">pragma mark - Fast Forwarding</h1>
+<ul>
+  <li>
+    <p>(id)forwardingTargetForSelector:(SEL)aSelector
+{
+  if (aSelector == @selector(sendMessage:)) {
+      return [MessageForwarding new];
+  }</p>
+
+    <p>return nil;
+}
+此时还缺一个转发消息的类MessageForwarding，这个类的设计与实现如下：</p>
+  </li>
+</ul>
+
+<p>@interface MessageForwarding : NSObject</p>
+
+<ul>
+  <li>(void)sendMessage:(NSString *)word;</li>
+</ul>
+
+<p>@end
+@implementation MessageForwarding</p>
+
+<ul>
+  <li>(void)sendMessage:(NSString *)word
+{
+  NSLog(@”fast forwarding way : send message = %@”, word);
+}</li>
+</ul>
+
+<p>@end
+此时，控制台会打印以下信息：</p>
+
+<p>fast forwarding way : send message = Sam Lau
+这里叫Fast，是因为这一步不会创建NSInvocation对象，但Normal Forwarding会创建它，所以相对于更快点。</p>
+
+<p>Normal Forwarding
+如果没有使用Fast Forwarding来消息转发，最后只有使用Normal Forwarding来进行消息转发。它首先调用methodSignatureForSelector:方法来获取函数的参数和返回值，如果返回为nil，程序会Crash掉，并抛出unrecognized selector sent to instance异常信息。如果返回一个函数签名，系统就会创建一个NSInvocation对象并调用-forwardInvocation:方法。</p>
+
+<p>继续前面的例子，将forwardingTargetForSelector方法注释掉，添加methodSignatureForSelector和forwardInvocation方法的实现：</p>
+
+<h1 id="pragma-mark---normal-forwarding">pragma mark - Normal Forwarding</h1>
+<ul>
+  <li>
+    <p>(NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector
+{
+  NSMethodSignature *methodSignature = [super methodSignatureForSelector:aSelector];</p>
+
+    <p>if (!methodSignature) {
+      methodSignature = [NSMethodSignature signatureWithObjCTypes:”v@:*”];
+  }</p>
+
+    <p>return methodSignature;
+}</p>
+  </li>
+  <li>
+    <p>(void)forwardInvocation:(NSInvocation *)anInvocation
+{
+  MessageForwarding *messageForwarding = [MessageForwarding new];</p>
+
+    <p>if ([messageForwarding respondsToSelector:anInvocation.selector]) {
+      [anInvocation invokeWithTarget:messageForwarding];
+  }
+}
+关于这个例子的示例代码请到github下载。</p>
+  </li>
+</ul>
+
+<p>三种方法的选择
+Runtime提供三种方式来将原来的方法实现代替掉，那该怎样选择它们呢？</p>
+
+<p>Method Resolution：由于Method Resolution不能像消息转发那样可以交给其他对象来处理，所以只适用于在原来的类中代替掉。
+Fast Forwarding：它可以将消息处理转发给其他对象，使用范围更广，不只是限于原来的对象。
+Normal Forwarding：它跟Fast Forwarding一样可以消息转发，但它能通过NSInvocation对象获取更多消息发送的信息，例如：target、selector、arguments和返回值等信息。
+Associated Objects
+Categories can be used to declare either instance methods or class methods but are not usually suitable for declaring additional properties. It’s valid syntax to include a property declaration in a category interface, but it’s not possible to declare an additional instance variable in a category. This means the compiler won’t synthesize any instance variable, nor will it synthesize any property accessor methods. You can write your own accessor methods in the category implementation, but you won’t be able to keep track of a value for that property unless it’s already stored by the original class. (Programming with Objective-C)
+当想使用Category对已存在的类进行扩展时，一般只能添加实例方法或类方法，而不适合添加额外的属性。虽然可以在Category头文件中声明property属性，但在实现文件中编译器是无法synthesize任何实例变量和属性访问方法。这时需要自定义属性访问方法并且使用Associated Objects来给已存在的类Category添加自定义的属性。Associated Objects提供三个API来向对象添加、获取和删除关联值：</p>
+
+<p>void objc_setAssociatedObject (id object, const void *key, id value, objc_AssociationPolicy policy )
+id objc_getAssociatedObject (id object, const void *key )
+void objc_removeAssociatedObjects (id object )
+其中objc_AssociationPolicy是个枚举类型，它可以指定Objc内存管理的引用计数机制。</p>
+
+<p>typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) {
+    OBJC_ASSOCIATION_ASSIGN = 0,           /<strong>&lt; Specifies a weak reference to the associated object. */
+    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1, /</strong>&lt; Specifies a strong reference to the associated object. 
+                                            *   The association is not made atomically. */
+    OBJC_ASSOCIATION_COPY_NONATOMIC = 3,   /<strong>&lt; Specifies that the associated object is copied. 
+                                            *   The association is not made atomically. */
+    OBJC_ASSOCIATION_RETAIN = 01401,       /</strong>&lt; Specifies a strong reference to the associated object.
+                                            *   The association is made atomically. */
+    OBJC_ASSOCIATION_COPY = 01403          /**&lt; Specifies that the associated object is copied.
+                                            *   The association is made atomically. */
+};
+下面有个关于NSObject+AssociatedObject Category添加属性associatedObject的示例代码:</p>
+
+<p>NSObject+AssociatedObject.h
+@interface NSObject (AssociatedObject)</p>
+
+<p>@property (strong, nonatomic) id associatedObject;</p>
+
+<p>@end
+NSObject+AssociatedObject.m
+@implementation NSObject (AssociatedObject)</p>
+
+<ul>
+  <li>
+    <p>(void)setAssociatedObject:(id)associatedObject
+{
+  objc_setAssociatedObject(self, @selector(associatedObject), associatedObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}</p>
+  </li>
+  <li>
+    <p>(id)associatedObject
+{
+  return objc_getAssociatedObject(self, _cmd);
+}</p>
+  </li>
+</ul>
+
+<p>@end
+Associated Objects的key要求是唯一并且是常量，而SEL是满足这个要求的，所以上面的采用隐藏参数_cmd作为key。</p>
+
+<p>Method Swizzling
+Method Swizzling就是在运行时将一个方法的实现代替为另一个方法的实现。如果能够利用好这个技巧，可以写出简洁、有效且维护性更好的代码。可以参考两篇关于Method Swizzling技巧的文章：</p>
+
+<p>nshipster Method Swizzling
+Method Swizzling 和 AOP 实践
+Aspect-Oriented Programming(AOP)
+类似记录日志、身份验证、缓存等事务非常琐碎，与业务逻辑无关，很多地方都有，又很难抽象出一个模块，这种程序设计问题，业界给它们起了一个名字叫横向关注点(Cross-cutting concern)，AOP作用就是分离横向关注点(Cross-cutting concern)来提高模块复用性，它可以在既有的代码添加一些额外的行为(记录日志、身份验证、缓存)而无需修改代码。</p>
+
+<p>危险性
+Method Swizzling就像一把瑞士小刀，如果使用得当，它会有效地解决问题。但使用不当，将带来很多麻烦。在stackoverflow上有人已经提出这样一个问题：What are the Dangers of Method Swizzling in Objective C?，它的危险性主要体现以下几个方面：</p>
+
+<p>Method swizzling is not atomic
+Changes behavior of un-owned code
+Possible naming conflicts
+Swizzling changes the method’s arguments
+The order of swizzles matters
+Difficult to understand (looks recursive)
+Difficult to debug
+总结
+虽然在平时项目不是经常用到Objective-C的Runtime特性，但当你阅读一些iOS开源项目时，你就会发现很多时候都会用到。所以深入理解Objective-C的Runtime数据结构、消息转发机制有助于你更容易地阅读和学习开源项目。</p>
+
+	  </div>
+
+		  
+
+		  
+
+		<hr>
+
+		<div>
+      <section class="share col-sm-6">
+        <h4 class="section-title">Share Post</h4>
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=runtime"
+           onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+          <i class="fa fa-twitter fa-lg"></i>
+          Twitter
+        </a>
+        <a class="btn btn-default btn-sm facebook" href="https://www.facebook.com/sharer/sharer.php"
+           onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+          <i class="fa fa-facebook fa-lg"></i>
+          Facebook
+        </a>
+        <a class="btn btn-default btn-sm gplus"
+           onclick="window.open('https://plus.google.com/share?url='+window.location.href, 'google-plus-share', 'width=490,height=530');return false;">
+          <i class="fa fa-google-plus fa-lg"></i>
+          Google+
+        </a>
+      </section>
+
+      <section class="col-sm-6 author">
+        <img src="http://www.gravatar.com/avatar/" class="img-rounded author-image" />
+        <h4 class="section-title author-name">Daniel</h4>
+        <p class="author-bio">Write The Code , Change The World!</p>
+      </section>
+    </div>
+
+    <div class="clearfix"></div>
+
+		<ul class="pager">
+		  
+		  <li class="previous"><a href="/2015/07/13/2%E5%AD%A6%E4%B9%A0git.html" title="学习git">&larr; Previous</a></li>
+		  
+		  
+			<li class="next disabled"><a>Next &rarr;</a>
+		  
+		</ul>
+
+		<hr>
+	</div>
+	
+	<div class="col-sm-2 sidebar-2">
+	
+	</div>
+</article>
+<div class="clearfix"></div>
+
+
+
+
+
+		<footer>
+			<hr/>
+			<p>
+				&copy; 2015 Daniel with Jekyll. Theme: <a href="https://github.com/dbtek/dbyll">dbyll</a> by dbtek.
+			</p>
+		</footer>
+	</div>
+
+	<script type="text/javascript" src="/assets/resources/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/resources/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/js/app.js"></script>
+</body>
+</html>
+
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  var _gaq = _gaq || [];
+  var pluginUrl =
+ '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'Write The Code , Change The World!']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+

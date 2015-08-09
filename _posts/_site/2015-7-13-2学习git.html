@@ -1,0 +1,256 @@
+<h2 id="git">Git基本工作流程</h2>
+<p>在git版本控制的目录下修改某个文件
+使用git add命令对修改后的文件快照，保存到暂存区域
+使用git commit命令提交更新，将保存在暂存区域的文件快照永久转储到 Git 目录中
+##Git基本技巧
+* 自动补全
+* Git 命令别名
+关于具体如何使用自动补全和命名别名技巧，请查看Pro git的技巧和窍门</p>
+
+<h1 id="git-1">Git版本控制</h1>
+<p>git init
+git clone
+git config
+#保存修改
+git add
+git commit
+##查看仓库
+git status
+git log –oneline
+##撤销修改
+###查看之前的commit
+git checkout <commit> <file>
+git checkout <commit>
+git checkout <branch>
+###撤销公共修改
+git revert <commit>
+###撤销本地修改
+git reset
+git clean
+##重写Git历史记录
+git commit --amend
+git rebase
+git reflog
+##Git协作开发
+###分支
+git branch
+git checkout
+git merge
+##仓库同步
+git remote
+git fetch
+git pull
+git push
+##Git工作流
+由于git拥有强大的分支特性，它的工作流比较灵活而缺乏约束，于是参考Atlassian Git Tutorial的Comparing Workflows章节提供四种Git工作流：</commit></branch></commit></file></commit></p>
+
+<p>Centralized Workflow
+Feature Branch Workflow
+Gitflow Workflow
+Forking Workflow
+以上工作流只是参考指南，而不是具体规则。你可以根据自己实际情况来选择适合自己的工作流或微调来满足自己的需要。</p>
+
+<p><code>git log --pretty=oneline</code>
+输出简化版的日志信息</p>
+
+<blockquote>
+  <p>4a0ef4fb687c2b4d1cdb2ca6b0dac325808371ad add read.txt
+一大串的数字是哈西码</p>
+</blockquote>
+
+<p>首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交3628164…882e1e0（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。</p>
+
+<p><code>git reset --hard 88d3a3e9d397023621911816daa4b27b31e260c2</code>
+回到某个版本上去</p>
+
+<p>想后悔了怎么办</p>
+
+<p>现在，你回退到了某个版本，关掉了电脑，第二天早上就后悔了，想恢复到新版本怎么办？找不到新版本的commit id怎么办？</p>
+
+<p>在Git中，总是有后悔药可以吃的。当你用$ git reset –hard HEAD^回退到add distributed版本时，再想恢复到append GPL，就必须找到append GPL的commit id。Git提供了一个命令git reflog用来记录你的每一次命令：</p>
+
+<p>现在，假定你已经完全掌握了暂存区的概念。下面，我们要讨论的就是，为什么Git比其他版本控制系统设计得优秀，因为Git跟踪并管理的是修改，而非文件。</p>
+
+<p>现在，你又理解了Git是如何跟踪修改的，每次修改，如果不add到暂存区，那就不会加入到commit中。</p>
+
+<p>git checkout – file命令中的–很重要，没有–，就变成了“切换到另一个分支”的命令，我们在后面的分支管理中会再次遇到git checkout命令。</p>
+
+<h2 id="section">删除文件</h2>
+<p>$ rm test.txt
+$ git rm test.txt</p>
+
+<pre><code>rm 'test.txt'
+$ git commit -m "remove test.txt"
+[master d17efd8] remove test.txt
+1 file changed, 1 deletion(-)
+delete mode 100644 test.txt
+</code></pre>
+
+<h2 id="section-1">上传代码</h2>
+
+<pre><code>git remote add origin https://github.com/kekeYe/testgit.git
+git push -u origin master
+</code></pre>
+
+<p>把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。</p>
+
+<p>由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。</p>
+
+<p>从现在起，只要本地作了提交，就可以通过命令：</p>
+
+<pre><code>$ git push origin master
+</code></pre>
+
+<p>要关联一个远程库，使用命令git remote add origin git@server-name:path/repo-name.git；</p>
+
+<p>关联后，使用命令git push -u origin master第一次推送master分支的所有内容；</p>
+
+<p>此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；</p>
+
+<p>分布式版本系统的最大好处之一是在本地工作完全不需要考虑远程库的存在，也就是有没有联网都可以正常工作，而SVN在没有联网的时候是拒绝干活的！当有网络的时候，再把本地提交推送一下就完成了同步，真是太方便了</p>
+
+<h2 id="section-2">创建分支</h2>
+<p>首先，我们创建dev分支，然后切换到dev分支：</p>
+
+<pre><code>$ git checkout -b dev
+Switched to a new branch 'dev'
+</code></pre>
+
+<p>git checkout命令加上-b参数表示创建并切换，相当于以下两条命令：</p>
+
+<pre><code>$ git branch dev
+$ git checkout dev
+Switched to branch 'dev'  
+</code></pre>
+
+<p>切换主分支</p>
+
+<pre><code>$ git checkout master
+Switched to branch 'master'
+</code></pre>
+
+<h5 id="section-3">合并分支</h5>
+<p>现在，我们把dev分支的工作成果合并到master分支上：</p>
+
+<p><code>$ git merge dev
+Updating d17efd8..fec145a
+Fast-forward
+ readme.txt |    1 +
+ 1 file changed, 1 insertion(+)</code></p>
+
+<p>git merge命令用于合并指定分支到当前分支。合并后，再查看readme.txt的内容，就可以看到，和dev分支的最新提交是完全一样的。</p>
+
+<p>注意到上面的Fast-forward信息，Git告诉我们，这次合并是“快进模式”，也就是直接把master指向dev的当前提交，所以合并速度非常快。</p>
+
+<p>当然，也不是每次合并都能Fast-forward，我们后面会将其他方式的合并。</p>
+
+<p>合并完成后，就可以放心地删除dev分支了：</p>
+
+<pre><code>$ git branch -d dev
+Deleted branch dev (was fec145a). 删除后，查看branch，就只剩下master分支了：
+
+$ git branch
+* master
+</code></pre>
+
+<p>Git鼓励大量使用分支：</p>
+
+<p>查看分支：git branch</p>
+
+<p>创建分支：git branch <name></name></p>
+
+<p>切换分支：git checkout <name></name></p>
+
+<p>创建+切换分支：git checkout -b <name></name></p>
+
+<p>合并某分支到当前分支：git merge <name></name></p>
+
+<p>删除分支：git branch -d <name>	
+##解决冲突
+切换分支修改内容提交
+然后切换回主分支  故意冲突
+最后合并报错</name></p>
+
+<pre><code>$ git merge feature1
+</code></pre>
+
+<p>解决冲突后 就可以上传了</p>
+
+<p>当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。</p>
+
+<p>用git log –graph命令可以看到分支合并图。</p>
+
+<h2 id="section-4">合并</h2>
+
+<p>Git分支十分强大，在团队开发中应该充分应用。</p>
+
+<p>合并分支时，加上–no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并。</p>
+
+<pre><code>$ git merge --no-ff -m "merge with no-ff" dev
+</code></pre>
+
+<h2 id="bug">解决突发状况 开发到一半去改bug</h2>
+<p>修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；</p>
+
+<p>当手头工作没有完成时，先把工作现场git stash一下，然后去修复bug，修复后，再git stash pop，回到工作现场。</p>
+
+<p>工作现场还在，Git把stash内容存在某个地方了，但是需要恢复一下，有两个办法：</p>
+
+<p>一是用git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除；</p>
+
+<p>另一种方式是用git stash pop，恢复的同时把stash内容也删了：</p>
+
+<p>开发在dev分支上进行 
+改bug 也要在分支上 进行</p>
+
+<h2 id="section-5">强行删除</h2>
+<p>虽然白干了，但是这个分支还是必须就地销毁：</p>
+
+<p>$ git branch -d feature-vulcan
+error: The branch ‘feature-vulcan’ is not fully merged.
+If you are sure you want to delete it, run ‘git branch -D feature-vulcan’.
+销毁失败。Git友情提醒，feature-vulcan分支还没有被合并，如果删除，将丢失掉修改，如果要强行删除，需要使用命令git branch -D feature-vulcan。</p>
+
+<p>现在我们强行删除：</p>
+
+<p>$ git branch -D feature-vulcan
+Deleted branch feature-vulcan (was 756d4af).</p>
+
+<p>推送分支</p>
+
+<p>推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，Git就会把该分支推送到远程库对应的远程分支上：</p>
+
+<pre><code>$ git push origin master 如果要推送其他分支，比如dev，就改成：
+
+$ git push origin dev
+</code></pre>
+
+<h2 id="section-6">推送分支</h2>
+<p>但是，并不是一定要把本地分支往远程推送，那么，哪些分支需要推送，哪些不需要呢？</p>
+
+<p>master分支是主分支，因此要时刻与远程同步；</p>
+
+<p>dev分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；</p>
+
+<p>bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；</p>
+
+<p>feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。</p>
+
+<p>总之，就是在Git中，分支完全可以在本地自己藏着玩，是否推送，视你的心情而定！</p>
+
+<h2 id="git-">给git 命令改名字</h2>
+<p>有没有经常敲错命令？比如git status？status这个单词真心不好记。</p>
+
+<p>如果敲git st就表示git status那就简单多了，当然这种偷懒的办法我们是极力赞成的。</p>
+
+<p>我们只需要敲一行命令，告诉Git，以后st就表示status：</p>
+
+<pre><code>$ git config --global alias.st status
+</code></pre>
+
+<h5 id="log">强大log</h5>
+<blockquote>
+  <pre><code>log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset' --abbrev-commit
+</code></pre>
+</blockquote>
+

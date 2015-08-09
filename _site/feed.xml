@@ -7,6 +7,706 @@
 		<atom:link href="/" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>runtime</title>
+				<description>&lt;h1 id=&quot;runtime&quot;&gt;runtime&lt;/h1&gt;
+&lt;p&gt;Objective-C是基于C语言加入了面向对象特性和消息转发机制的动态语言，这意味着它不仅需要一个编译器，还需要Runtime系统来动态创建类和对象，进行消息发送和转发。下面通过分析Apple开源的Runtime代码来深入理解Objective-C的Runtime机制。&lt;/p&gt;
+
+&lt;p&gt;Runtime数据结构
+在Objective-C中，使用&lt;code&gt;[receiver message]&lt;/code&gt;语法并不会马上执行&lt;code&gt;receiver&lt;/code&gt;对象的&lt;code&gt;message&lt;/code&gt;方法的代码，而是向&lt;code&gt;receiver&lt;/code&gt;发送一条&lt;code&gt;message&lt;/code&gt;消息，这条消息可能由&lt;code&gt;receiver&lt;/code&gt;来处理，也可能由转发给其他对象来处理，也有可能假装没有接收到这条消息而没有处理。其实&lt;code&gt;[receiver message]&lt;/code&gt;被编译器转化为:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;id objc_msgSend ( id self, SEL op, ... );
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面从两个数据结构&lt;code&gt;id&lt;/code&gt;和&lt;code&gt;SEL&lt;/code&gt;来逐步分析和理解Runtime有哪些重要的数据结构。&lt;/p&gt;
+
+&lt;h2 id=&quot;sel&quot;&gt;SEL&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;SEL&lt;/code&gt;是函数&lt;code&gt;objc_msgSend&lt;/code&gt;第二个参数的数据类型，表示方法选择器，按下面路径打开&lt;code&gt;objc.h&lt;/code&gt;文件&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/166109-73bc4103f4b4e671.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;image&quot; /&gt;
+***
+	SEL Data Structure&lt;/p&gt;
+
+&lt;p&gt;查看到SEL数据结构如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;typedef struct objc_selector *SEL;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其实它就是映射到方法的C字符串，你可以通过Objc编译器命令&lt;code&gt;@selector()&lt;/code&gt;或者&lt;code&gt;Runtime&lt;/code&gt;系统的&lt;code&gt;sel_registerName&lt;/code&gt;函数来获取一个&lt;code&gt;SEL&lt;/code&gt;类型的方法选择器。
+如果你知道&lt;code&gt;selector&lt;/code&gt;对应的方法名是什么，可以通过&lt;code&gt;NSString* NSStringFromSelector(SEL aSelector)&lt;/code&gt;方法将&lt;code&gt;SEL&lt;/code&gt;转化为字符串，再用&lt;code&gt;NSLog&lt;/code&gt;打印。&lt;/p&gt;
+
+&lt;h2 id=&quot;id&quot;&gt;id&lt;/h2&gt;
+&lt;p&gt;接下来看&lt;code&gt;objc_msgSend&lt;/code&gt;第一个参数的数据类型&lt;code&gt;id&lt;/code&gt;，&lt;code&gt;id&lt;/code&gt;是通用类型指针，能够表示任何对象。按下面路径打开&lt;code&gt;objc.h&lt;/code&gt;文件&lt;/p&gt;
+
+&lt;p&gt;id Data Structure.png
+查看到id数据结构如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/// Represents an instance of a class.
+struct objc_object {
+Class isa  OBJC_ISA_AVAILABILITY;
+};
+
+/// A pointer to an instance of a class.
+typedef struct objc_object *id;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;id&lt;/code&gt;其实就是一个指向&lt;code&gt;objc_object&lt;/code&gt;结构体指针，它包含一个&lt;code&gt;Class isa&lt;/code&gt;成员，根据&lt;code&gt;isa&lt;/code&gt;指针就可以顺藤摸瓜找到对象所属的类。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意：根据Apple的官方文档&lt;code&gt;Key-Value Observing Implementation Details&lt;/code&gt;提及，&lt;code&gt;key-value observing&lt;/code&gt;是使用&lt;code&gt;isa-swizzling&lt;/code&gt;的技术实现的，isa指针在运行时被修改，指向一个中间类而不是真正的类。所以，你不应该使用isa指针来确定类的关系，而是使用class方法来确定实例对象的类。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;class&quot;&gt;Class&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;isa&lt;/code&gt;指针的数据类型是Class，Class表示对象所属的类，按下面路径打开&lt;code&gt;objc.h&lt;/code&gt;文件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Class Data Structure
+/// An opaque type that represents an Objective-C class.
+typedef struct objc_class *Class; 可以查看到Class其实就是一个`objc_class`结构体指针，但这个头文件找不到它的定义，需要在`runtime.h`才能找到`objc_class`结构体的定义。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;按下面路径打开runtime.h文件&lt;/p&gt;
+
+&lt;p&gt;objc_class Data Structure
+查看到&lt;code&gt;objc_class&lt;/code&gt;结构体定义如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;struct objc_class {
+Class isa  OBJC_ISA_AVAILABILITY;
+
+#if !__OBJC2__
+Class super_class                                        OBJC2_UNAVAILABLE;
+const char *name                                         OBJC2_UNAVAILABLE;
+long version                                             OBJC2_UNAVAILABLE;
+long info                                                OBJC2_UNAVAILABLE;
+long instance_size                                       OBJC2_UNAVAILABLE;
+struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;
+struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;
+struct objc_cache *cache                                 OBJC2_UNAVAILABLE;
+struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
+#endif
+} OBJC2_UNAVAILABLE;
+/* Use `Class` instead of `struct objc_class *` */
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意：OBJC2_UNAVAILABLE是一个Apple对Objc系统运行版本进行约束的宏定义，主要为了兼容非Objective-C 2.0的遗留版本，但我们仍能从中获取一些有用信息。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;让我们分析一些重要的成员变量表示什么意思和对应使用哪些数据结构。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;isa表示一个Class对象的Class，也就是Meta Class。在面向对象设计中，一切都是对象，Class在设计中本身也是一个对象。我们会在objc-runtime-new.h文件找到证据，发现objc_class有以下定义：&lt;/p&gt;
+
+    &lt;p&gt;struct objc_class : objc_object {&lt;br /&gt;
+  // Class ISA;&lt;br /&gt;
+Class superclass;&lt;br /&gt;
+cache_t cache;             // formerly cache pointer and vtable&lt;br /&gt;
+class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags&lt;br /&gt;
+……&lt;br /&gt;
+}`&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;由此可见，结构体&lt;code&gt;objc_class&lt;/code&gt;也是继承&lt;code&gt;objc_object&lt;/code&gt;，说明Class在设计中本身也是一个对象。&lt;/p&gt;
+
+&lt;p&gt;其实Meta Class也是一个Class，那么它也跟其他Class一样有自己的isa和super_class指针，关系如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/166109-fb22b2cd2fe17745.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Class isa and superclass relationship from Google
+上图实线是super_class指针，虚线是isa指针。有几个关键点需要解释以下:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Root class (class)其实就是NSObject，NSObject是没有超类的，所以Root class(class)的superclass指向nil。&lt;/li&gt;
+  &lt;li&gt;每个Class都有一个isa指针指向唯一的Meta class&lt;/li&gt;
+  &lt;li&gt;Root class(meta)的superclass指向Root class(class)，也就是NSObject，形成一个回路。&lt;/li&gt;
+  &lt;li&gt;每个Meta class的isa指针都指向Root class (meta)。&lt;/li&gt;
+  &lt;li&gt;super_class表示实例对象对应的父类&lt;/li&gt;
+  &lt;li&gt;name表示类名&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;ivars表示多个成员变量，它指向objc_ivar_list结构体。在runtime.h可以看到它的定义：&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  struct objc_ivar_list {  
+  int ivar_count                                           		OBJC2_UNAVAILABLE;  
+  #ifdef __LP64__  
+  int space                                                			OBJC2_UNAVAILABLE;  
+      #endif  
+  /* variable length structure */    
+  struct objc_ivar ivar_list[1]  
+  OBJC2_UNAVAILABLE;  
+  } `objc_ivar_list`其实就是一个链表，存储多个`objc_ivar`，而`objc_ivar`结构体存储类的单个成员变量信息。
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;methodLists表示方法列表，它指向objc_method_list结构体的二级指针，可以动态修改*methodLists的值来添加成员方法，也是Category实现原理，同样也解释Category不能添加实例变量的原因。在runtime.h可以看到它的定义：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;	struct objc_method_list {
+  				struct objc_method_list *obsolete                        				OBJC2_UNAVAILABLE;
+&lt;/code&gt;&lt;/pre&gt;
+
+ 				 int method_count                                         				OBJC2_UNAVAILABLE;
+&lt;pre&gt;&lt;code&gt;			#ifdef __LP64__
+  				int space                                                				OBJC2_UNAVAILABLE;
+			#endif   /* variable length structure */   struct objc_method method_list[1]                        OBJC2_UNAVAILABLE; }` 同理，objc_method_list也是一个链表，存储多个objc_method，而objc_method结构体存储类的某个方法的信息。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;cache用来缓存经常访问的方法，它指向objc_cache结构体，后面会重点讲到。&lt;/p&gt;
+
+&lt;p&gt;protocols表示类遵循哪些协议
+Method
+Method表示类中的某个方法，在runtime.h文件中找到它的定义：&lt;/p&gt;
+
+&lt;p&gt;/// An opaque type that represents a method in a class definition.
+typedef struct objc_method *Method;&lt;/p&gt;
+
+&lt;p&gt;struct objc_method {
+    SEL method_name                                          OBJC2_UNAVAILABLE;
+    char *method_types                                       OBJC2_UNAVAILABLE;
+    IMP method_imp                                           OBJC2_UNAVAILABLE;
+}
+其实Method就是一个指向objc_method结构体指针，它存储了方法名(method_name)、方法类型(method_types)和方法实现(method_imp)等信息。而method_imp的数据类型是IMP，它是一个函数指针，后面会重点提及。&lt;/p&gt;
+
+&lt;p&gt;Ivar
+Ivar表示类中的实例变量，在runtime.h文件中找到它的定义：&lt;/p&gt;
+
+&lt;p&gt;/// An opaque type that represents an instance variable.
+typedef struct objc_ivar *Ivar;&lt;/p&gt;
+
+&lt;p&gt;struct objc_ivar {
+    char *ivar_name                                          OBJC2_UNAVAILABLE;
+    char *ivar_type                                          OBJC2_UNAVAILABLE;
+    int ivar_offset                                          OBJC2_UNAVAILABLE;
+#ifdef &lt;strong&gt;LP64&lt;/strong&gt;
+    int space                                                OBJC2_UNAVAILABLE;
+#endif
+}
+Ivar其实就是一个指向objc_ivar结构体指针，它包含了变量名(ivar_name)、变量类型(ivar_type)等信息。&lt;/p&gt;
+
+&lt;p&gt;IMP
+在上面讲Method时就说过，IMP本质上就是一个函数指针，指向方法的实现，在objc.h找到它的定义：&lt;/p&gt;
+
+&lt;p&gt;/// A pointer to the function of a method implementation. 
+#if !OBJC_OLD_DISPATCH_PROTOTYPES
+typedef void (&lt;em&gt;IMP)(void /&lt;/em&gt; id, SEL, … &lt;em&gt;/ ); 
+#else
+typedef id (&lt;/em&gt;IMP)(id, SEL, …); 
+#endif
+当你向某个对象发送一条信息，可以由这个函数指针来指定方法的实现，它最终就会执行那段代码，这样可以绕开消息传递阶段而去执行另一个方法实现。&lt;/p&gt;
+
+&lt;p&gt;Cache
+顾名思义，Cache主要用来缓存，那它缓存什么呢？我们先在runtime.h文件看看它的定义：&lt;/p&gt;
+
+&lt;p&gt;typedef struct objc_cache *Cache                             OBJC2_UNAVAILABLE;&lt;/p&gt;
+
+&lt;p&gt;struct objc_cache {
+    unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
+    unsigned int occupied                                    OBJC2_UNAVAILABLE;
+    Method buckets[1]                                        OBJC2_UNAVAILABLE;
+};
+Cache其实就是一个存储Method的链表，主要是为了优化方法调用的性能。当对象receiver调用方法message时，首先根据对象receiver的isa指针查找到它对应的类，然后在类的methodLists中搜索方法，如果没有找到，就使用super_class指针到父类中的methodLists查找，一旦找到就调用方法。如果没有找到，有可能消息转发，也可能忽略它。但这样查找方式效率太低，因为往往一个类大概只有20%的方法经常被调用，占总调用次数的80%。所以使用Cache来缓存经常调用的方法，当调用方法时，优先在Cache查找，如果没有找到，再到methodLists查找。&lt;/p&gt;
+
+&lt;p&gt;消息发送
+前面从objc_msgSend作为入口，逐步深入分析Runtime的数据结构，了解每个数据结构的作用和它们之间关系后，我们正式转入消息发送这个正题。&lt;/p&gt;
+
+&lt;p&gt;objc_msgSend函数
+在前面已经提过，当某个对象使用语法[receiver message]来调用某个方法时，其实[receiver message]被编译器转化为:&lt;/p&gt;
+
+&lt;p&gt;id objc_msgSend ( id self, SEL op, … );
+现在让我们看一下objc_msgSend它具体是如何发送消息:&lt;/p&gt;
+
+&lt;p&gt;首先根据receiver对象的isa指针获取它对应的class
+优先在class的cache查找message方法，如果找不到，再到methodLists查找
+如果没有在class找到，再到super_class查找
+一旦找到message这个方法，就执行它实现的IMP。&lt;/p&gt;
+
+&lt;p&gt;Objc Message.gif
+self与super
+为了让大家更好地理解self和super，借用sunnyxx博客的ios程序员6级考试一道题目：下面的代码分别输出什么？&lt;/p&gt;
+
+&lt;p&gt;@implementation Son : Father
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        NSLog(@”%@”, NSStringFromClass([self class]));
+        NSLog(@”%@”, NSStringFromClass([super class]));
+    }
+    return self;
+}
+@end
+self表示当前这个类的对象，而super是一个编译器标示符，和self指向同一个消息接受者。在本例中，无论是[self class]还是[super class]，接受消息者都是Son对象，但super与self不同的是，self调用class方法时，是在子类Son中查找方法，而super调用class方法时，是在父类Father中查找方法。&lt;/p&gt;
+
+&lt;p&gt;当调用[self class]方法时，会转化为objc_msgSend函数，这个函数定义如下：&lt;/p&gt;
+
+&lt;p&gt;id objc_msgSend(id self, SEL op, …)
+这时会从当前Son类的方法列表中查找，如果没有，就到Father类查找，还是没有，最后在NSObject类查找到。我们可以从NSObject.mm文件中看到- (Class)class的实现：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;(Class)class {
+  return object_getClass(self);
+}
+所以NSLog(@”%@”, NSStringFromClass([self class]));会输出Son。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当调用[super class]方法时，会转化为objc_msgSendSuper，这个函数定义如下：&lt;/p&gt;
+
+&lt;p&gt;id objc_msgSendSuper(struct objc_super *super, SEL op, …)
+objc_msgSendSuper函数第一个参数super的数据类型是一个指向objc_super的结构体，从message.h文件中查看它的定义：&lt;/p&gt;
+
+&lt;p&gt;/// Specifies the superclass of an instance. 
+struct objc_super {
+    /// Specifies an instance of a class.
+    __unsafe_unretained id receiver;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/// Specifies the particular superclass of the instance to message.  #if !defined(__cplusplus)  &amp;amp;&amp;amp;  !__OBJC2__
+/* For compatibility with old objc-runtime.h header */
+__unsafe_unretained Class class; #else
+__unsafe_unretained Class super_class; #endif
+/* super_class is the first class to search */ }; #endif 结构体包含两个成员，第一个是receiver，表示某个类的实例。第二个是super_class表示当前类的父类。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这时首先会构造出objc_super结构体，这个结构体第一个成员是self，第二个成员是(id)class_getSuperclass(objc_getClass(“Son”))，实际上该函数会输出Father。然后在Father类查找class方法，查找不到，最后在NSObject查到。此时，内部使用objc_msgSend(objc_super-&amp;gt;receiver, @selector(class))去调用，与[self class]调用相同，所以结果还是Son。&lt;/p&gt;
+
+&lt;p&gt;隐藏参数self和_cmd
+当[receiver message]调用方法时，系统会在运行时偷偷地动态传入两个隐藏参数self和_cmd，之所以称它们为隐藏参数，是因为在源代码中没有声明和定义这两个参数。至于对于self的描述，上面已经解释非常清楚了，下面我们重点讲解_cmd。&lt;/p&gt;
+
+&lt;p&gt;_cmd表示当前调用方法，其实它就是一个方法选择器SEL。一般用于判断方法名或在Associated Objects中唯一标识键名，后面在Associated Objects会讲到。&lt;/p&gt;
+
+&lt;p&gt;方法解析与消息转发
+[receiver message]调用方法时，如果在message方法在receiver对象的类继承体系中没有找到方法，那怎么办？一般情况下，程序在运行时就会Crash掉，抛出 unrecognized selector sent to …类似这样的异常信息。但在抛出异常之前，还有三次机会按以下顺序让你拯救程序。&lt;/p&gt;
+
+&lt;p&gt;Method Resolution
+Fast Forwarding
+Normal Forwarding&lt;/p&gt;
+
+&lt;p&gt;Message Forward from Google
+Method Resolution
+首先Objective-C在运行时调用+ resolveInstanceMethod:或+ resolveClassMethod:方法，让你添加方法的实现。如果你添加方法并返回YES，那系统在运行时就会重新启动一次消息发送的过程。&lt;/p&gt;
+
+&lt;p&gt;举一个简单例子，定义一个类Message，它主要定义一个方法sendMessage，下面就是它的设计与实现：&lt;/p&gt;
+
+&lt;p&gt;@interface Message : NSObject&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;(void)sendMessage:(NSString *)word;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;@end
+@implementation Message&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;(void)sendMessage:(NSString *)word
+{
+  NSLog(@”normal way : send message = %@”, word);
+}&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;@end
+如果我在viewDidLoad方法中创建Message对象并调用sendMessage方法：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;(void)viewDidLoad {
+  [super viewDidLoad];&lt;/p&gt;
+
+    &lt;p&gt;Message *message = [Message new];
+  [message sendMessage:@”Sam Lau”];
+}
+控制台会打印以下信息:&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;normal way : send message = Sam Lau
+但现在我将原来sendMessage方法实现给注释掉，覆盖resolveInstanceMethod方法：&lt;/p&gt;
+
+&lt;h1 id=&quot;pragma-mark---method-resolution&quot;&gt;pragma mark - Method Resolution&lt;/h1&gt;
+
+&lt;p&gt;/// override resolveInstanceMethod or resolveClassMethod for changing sendMessage method implementation
++ (BOOL)resolveInstanceMethod:(SEL)sel
+{
+    if (sel == @selector(sendMessage:)) {
+        class_addMethod([self class], sel, imp_implementationWithBlock(^(id self, NSString &lt;em&gt;word) {
+            NSLog(@”method resolution way : send message = %@”, word);
+        }), “v@&lt;/em&gt;”);
+    }&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;return YES; } 控制台就会打印以下信息：
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;method resolution way : send message = Sam Lau
+注意到上面代码有这样一个字符串”v@*，它表示方法的参数和返回值，详情请参考Type Encodings&lt;/p&gt;
+
+&lt;p&gt;如果resolveInstanceMethod方法返回NO，运行时就跳转到下一步：消息转发(Message Forwarding)&lt;/p&gt;
+
+&lt;p&gt;Fast Forwarding
+如果目标对象实现- forwardingTargetForSelector:方法，系统就会在运行时调用这个方法，只要这个方法返回的不是nil或self，也会重启消息发送的过程，把这消息转发给其他对象来处理。否则，就会继续Normal Fowarding。&lt;/p&gt;
+
+&lt;p&gt;继续上面Message类的例子，将sendMessage和resolveInstanceMethod方法注释掉，然后添加forwardingTargetForSelector方法的实现：&lt;/p&gt;
+
+&lt;h1 id=&quot;pragma-mark---fast-forwarding&quot;&gt;pragma mark - Fast Forwarding&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;(id)forwardingTargetForSelector:(SEL)aSelector
+{
+  if (aSelector == @selector(sendMessage:)) {
+      return [MessageForwarding new];
+  }&lt;/p&gt;
+
+    &lt;p&gt;return nil;
+}
+此时还缺一个转发消息的类MessageForwarding，这个类的设计与实现如下：&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;@interface MessageForwarding : NSObject&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;(void)sendMessage:(NSString *)word;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;@end
+@implementation MessageForwarding&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;(void)sendMessage:(NSString *)word
+{
+  NSLog(@”fast forwarding way : send message = %@”, word);
+}&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;@end
+此时，控制台会打印以下信息：&lt;/p&gt;
+
+&lt;p&gt;fast forwarding way : send message = Sam Lau
+这里叫Fast，是因为这一步不会创建NSInvocation对象，但Normal Forwarding会创建它，所以相对于更快点。&lt;/p&gt;
+
+&lt;p&gt;Normal Forwarding
+如果没有使用Fast Forwarding来消息转发，最后只有使用Normal Forwarding来进行消息转发。它首先调用methodSignatureForSelector:方法来获取函数的参数和返回值，如果返回为nil，程序会Crash掉，并抛出unrecognized selector sent to instance异常信息。如果返回一个函数签名，系统就会创建一个NSInvocation对象并调用-forwardInvocation:方法。&lt;/p&gt;
+
+&lt;p&gt;继续前面的例子，将forwardingTargetForSelector方法注释掉，添加methodSignatureForSelector和forwardInvocation方法的实现：&lt;/p&gt;
+
+&lt;h1 id=&quot;pragma-mark---normal-forwarding&quot;&gt;pragma mark - Normal Forwarding&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;(NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector
+{
+  NSMethodSignature *methodSignature = [super methodSignatureForSelector:aSelector];&lt;/p&gt;
+
+    &lt;p&gt;if (!methodSignature) {
+      methodSignature = [NSMethodSignature signatureWithObjCTypes:”v@:*”];
+  }&lt;/p&gt;
+
+    &lt;p&gt;return methodSignature;
+}&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;(void)forwardInvocation:(NSInvocation *)anInvocation
+{
+  MessageForwarding *messageForwarding = [MessageForwarding new];&lt;/p&gt;
+
+    &lt;p&gt;if ([messageForwarding respondsToSelector:anInvocation.selector]) {
+      [anInvocation invokeWithTarget:messageForwarding];
+  }
+}
+关于这个例子的示例代码请到github下载。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;三种方法的选择
+Runtime提供三种方式来将原来的方法实现代替掉，那该怎样选择它们呢？&lt;/p&gt;
+
+&lt;p&gt;Method Resolution：由于Method Resolution不能像消息转发那样可以交给其他对象来处理，所以只适用于在原来的类中代替掉。
+Fast Forwarding：它可以将消息处理转发给其他对象，使用范围更广，不只是限于原来的对象。
+Normal Forwarding：它跟Fast Forwarding一样可以消息转发，但它能通过NSInvocation对象获取更多消息发送的信息，例如：target、selector、arguments和返回值等信息。
+Associated Objects
+Categories can be used to declare either instance methods or class methods but are not usually suitable for declaring additional properties. It’s valid syntax to include a property declaration in a category interface, but it’s not possible to declare an additional instance variable in a category. This means the compiler won’t synthesize any instance variable, nor will it synthesize any property accessor methods. You can write your own accessor methods in the category implementation, but you won’t be able to keep track of a value for that property unless it’s already stored by the original class. (Programming with Objective-C)
+当想使用Category对已存在的类进行扩展时，一般只能添加实例方法或类方法，而不适合添加额外的属性。虽然可以在Category头文件中声明property属性，但在实现文件中编译器是无法synthesize任何实例变量和属性访问方法。这时需要自定义属性访问方法并且使用Associated Objects来给已存在的类Category添加自定义的属性。Associated Objects提供三个API来向对象添加、获取和删除关联值：&lt;/p&gt;
+
+&lt;p&gt;void objc_setAssociatedObject (id object, const void *key, id value, objc_AssociationPolicy policy )
+id objc_getAssociatedObject (id object, const void *key )
+void objc_removeAssociatedObjects (id object )
+其中objc_AssociationPolicy是个枚举类型，它可以指定Objc内存管理的引用计数机制。&lt;/p&gt;
+
+&lt;p&gt;typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) {
+    OBJC_ASSOCIATION_ASSIGN = 0,           /&lt;strong&gt;&amp;lt; Specifies a weak reference to the associated object. */
+    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1, /&lt;/strong&gt;&amp;lt; Specifies a strong reference to the associated object. 
+                                            *   The association is not made atomically. */
+    OBJC_ASSOCIATION_COPY_NONATOMIC = 3,   /&lt;strong&gt;&amp;lt; Specifies that the associated object is copied. 
+                                            *   The association is not made atomically. */
+    OBJC_ASSOCIATION_RETAIN = 01401,       /&lt;/strong&gt;&amp;lt; Specifies a strong reference to the associated object.
+                                            *   The association is made atomically. */
+    OBJC_ASSOCIATION_COPY = 01403          /**&amp;lt; Specifies that the associated object is copied.
+                                            *   The association is made atomically. */
+};
+下面有个关于NSObject+AssociatedObject Category添加属性associatedObject的示例代码:&lt;/p&gt;
+
+&lt;p&gt;NSObject+AssociatedObject.h
+@interface NSObject (AssociatedObject)&lt;/p&gt;
+
+&lt;p&gt;@property (strong, nonatomic) id associatedObject;&lt;/p&gt;
+
+&lt;p&gt;@end
+NSObject+AssociatedObject.m
+@implementation NSObject (AssociatedObject)&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;(void)setAssociatedObject:(id)associatedObject
+{
+  objc_setAssociatedObject(self, @selector(associatedObject), associatedObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;(id)associatedObject
+{
+  return objc_getAssociatedObject(self, _cmd);
+}&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;@end
+Associated Objects的key要求是唯一并且是常量，而SEL是满足这个要求的，所以上面的采用隐藏参数_cmd作为key。&lt;/p&gt;
+
+&lt;p&gt;Method Swizzling
+Method Swizzling就是在运行时将一个方法的实现代替为另一个方法的实现。如果能够利用好这个技巧，可以写出简洁、有效且维护性更好的代码。可以参考两篇关于Method Swizzling技巧的文章：&lt;/p&gt;
+
+&lt;p&gt;nshipster Method Swizzling
+Method Swizzling 和 AOP 实践
+Aspect-Oriented Programming(AOP)
+类似记录日志、身份验证、缓存等事务非常琐碎，与业务逻辑无关，很多地方都有，又很难抽象出一个模块，这种程序设计问题，业界给它们起了一个名字叫横向关注点(Cross-cutting concern)，AOP作用就是分离横向关注点(Cross-cutting concern)来提高模块复用性，它可以在既有的代码添加一些额外的行为(记录日志、身份验证、缓存)而无需修改代码。&lt;/p&gt;
+
+&lt;p&gt;危险性
+Method Swizzling就像一把瑞士小刀，如果使用得当，它会有效地解决问题。但使用不当，将带来很多麻烦。在stackoverflow上有人已经提出这样一个问题：What are the Dangers of Method Swizzling in Objective C?，它的危险性主要体现以下几个方面：&lt;/p&gt;
+
+&lt;p&gt;Method swizzling is not atomic
+Changes behavior of un-owned code
+Possible naming conflicts
+Swizzling changes the method’s arguments
+The order of swizzles matters
+Difficult to understand (looks recursive)
+Difficult to debug
+总结
+虽然在平时项目不是经常用到Objective-C的Runtime特性，但当你阅读一些iOS开源项目时，你就会发现很多时候都会用到。所以深入理解Objective-C的Runtime数据结构、消息转发机制有助于你更容易地阅读和学习开源项目。&lt;/p&gt;
+</description>
+				<pubDate>Fri, 07 Aug 2015 00:00:00 +0800</pubDate>
+				<link>/2015/08/07/0runtime.html</link>
+				<guid isPermaLink="true">/2015/08/07/0runtime.html</guid>
+			</item>
+		
+			<item>
+				<title>学习git</title>
+				<description>&lt;p&gt;&lt;code&gt;git log --pretty=oneline&lt;/code&gt;
+输出简化版的日志信息&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;4a0ef4fb687c2b4d1cdb2ca6b0dac325808371ad add read.txt
+一大串的数字是哈西码&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交3628164…882e1e0（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;git reset --hard 88d3a3e9d397023621911816daa4b27b31e260c2&lt;/code&gt;
+回到某个版本上去&lt;/p&gt;
+
+&lt;p&gt;想后悔了怎么办&lt;/p&gt;
+
+&lt;p&gt;现在，你回退到了某个版本，关掉了电脑，第二天早上就后悔了，想恢复到新版本怎么办？找不到新版本的commit id怎么办？&lt;/p&gt;
+
+&lt;p&gt;在Git中，总是有后悔药可以吃的。当你用$ git reset –hard HEAD^回退到add distributed版本时，再想恢复到append GPL，就必须找到append GPL的commit id。Git提供了一个命令git reflog用来记录你的每一次命令：&lt;/p&gt;
+
+&lt;p&gt;现在，假定你已经完全掌握了暂存区的概念。下面，我们要讨论的就是，为什么Git比其他版本控制系统设计得优秀，因为Git跟踪并管理的是修改，而非文件。&lt;/p&gt;
+
+&lt;p&gt;现在，你又理解了Git是如何跟踪修改的，每次修改，如果不add到暂存区，那就不会加入到commit中。&lt;/p&gt;
+
+&lt;p&gt;git checkout – file命令中的–很重要，没有–，就变成了“切换到另一个分支”的命令，我们在后面的分支管理中会再次遇到git checkout命令。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;删除文件&lt;/h2&gt;
+&lt;p&gt;$ rm test.txt
+$ git rm test.txt&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rm &#39;test.txt&#39;
+$ git commit -m &quot;remove test.txt&quot;
+[master d17efd8] remove test.txt
+1 file changed, 1 deletion(-)
+delete mode 100644 test.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;上传代码&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;git remote add origin https://github.com/kekeYe/testgit.git
+git push -u origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。&lt;/p&gt;
+
+&lt;p&gt;由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。&lt;/p&gt;
+
+&lt;p&gt;从现在起，只要本地作了提交，就可以通过命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git push origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要关联一个远程库，使用命令git remote add origin git@server-name:path/repo-name.git；&lt;/p&gt;
+
+&lt;p&gt;关联后，使用命令git push -u origin master第一次推送master分支的所有内容；&lt;/p&gt;
+
+&lt;p&gt;此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；&lt;/p&gt;
+
+&lt;p&gt;分布式版本系统的最大好处之一是在本地工作完全不需要考虑远程库的存在，也就是有没有联网都可以正常工作，而SVN在没有联网的时候是拒绝干活的！当有网络的时候，再把本地提交推送一下就完成了同步，真是太方便了&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;创建分支&lt;/h2&gt;
+&lt;p&gt;首先，我们创建dev分支，然后切换到dev分支：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git checkout -b dev
+Switched to a new branch &#39;dev&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;git checkout命令加上-b参数表示创建并切换，相当于以下两条命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git branch dev
+$ git checkout dev
+Switched to branch &#39;dev&#39;  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;切换主分支&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git checkout master
+Switched to branch &#39;master&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h5 id=&quot;section-3&quot;&gt;合并分支&lt;/h5&gt;
+&lt;p&gt;现在，我们把dev分支的工作成果合并到master分支上：&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ git merge dev
+Updating d17efd8..fec145a
+Fast-forward
+ readme.txt |    1 +
+ 1 file changed, 1 insertion(+)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;git merge命令用于合并指定分支到当前分支。合并后，再查看readme.txt的内容，就可以看到，和dev分支的最新提交是完全一样的。&lt;/p&gt;
+
+&lt;p&gt;注意到上面的Fast-forward信息，Git告诉我们，这次合并是“快进模式”，也就是直接把master指向dev的当前提交，所以合并速度非常快。&lt;/p&gt;
+
+&lt;p&gt;当然，也不是每次合并都能Fast-forward，我们后面会将其他方式的合并。&lt;/p&gt;
+
+&lt;p&gt;合并完成后，就可以放心地删除dev分支了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git branch -d dev
+Deleted branch dev (was fec145a). 删除后，查看branch，就只剩下master分支了：
+
+$ git branch
+* master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Git鼓励大量使用分支：&lt;/p&gt;
+
+&lt;p&gt;查看分支：git branch&lt;/p&gt;
+
+&lt;p&gt;创建分支：git branch &lt;name&gt;&lt;/name&gt;&lt;/p&gt;
+
+&lt;p&gt;切换分支：git checkout &lt;name&gt;&lt;/name&gt;&lt;/p&gt;
+
+&lt;p&gt;创建+切换分支：git checkout -b &lt;name&gt;&lt;/name&gt;&lt;/p&gt;
+
+&lt;p&gt;合并某分支到当前分支：git merge &lt;name&gt;&lt;/name&gt;&lt;/p&gt;
+
+&lt;p&gt;删除分支：git branch -d &lt;name&gt;	
+##解决冲突
+切换分支修改内容提交
+然后切换回主分支  故意冲突
+最后合并报错&lt;/name&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git merge feature1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;解决冲突后 就可以上传了&lt;/p&gt;
+
+&lt;p&gt;当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。&lt;/p&gt;
+
+&lt;p&gt;用git log –graph命令可以看到分支合并图。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;合并&lt;/h2&gt;
+
+&lt;p&gt;Git分支十分强大，在团队开发中应该充分应用。&lt;/p&gt;
+
+&lt;p&gt;合并分支时，加上–no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git merge --no-ff -m &quot;merge with no-ff&quot; dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;bug&quot;&gt;解决突发状况 开发到一半去改bug&lt;/h2&gt;
+&lt;p&gt;修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；&lt;/p&gt;
+
+&lt;p&gt;当手头工作没有完成时，先把工作现场git stash一下，然后去修复bug，修复后，再git stash pop，回到工作现场。&lt;/p&gt;
+
+&lt;p&gt;工作现场还在，Git把stash内容存在某个地方了，但是需要恢复一下，有两个办法：&lt;/p&gt;
+
+&lt;p&gt;一是用git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除；&lt;/p&gt;
+
+&lt;p&gt;另一种方式是用git stash pop，恢复的同时把stash内容也删了：&lt;/p&gt;
+
+&lt;p&gt;开发在dev分支上进行 
+改bug 也要在分支上 进行&lt;/p&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;强行删除&lt;/h2&gt;
+&lt;p&gt;虽然白干了，但是这个分支还是必须就地销毁：&lt;/p&gt;
+
+&lt;p&gt;$ git branch -d feature-vulcan
+error: The branch ‘feature-vulcan’ is not fully merged.
+If you are sure you want to delete it, run ‘git branch -D feature-vulcan’.
+销毁失败。Git友情提醒，feature-vulcan分支还没有被合并，如果删除，将丢失掉修改，如果要强行删除，需要使用命令git branch -D feature-vulcan。&lt;/p&gt;
+
+&lt;p&gt;现在我们强行删除：&lt;/p&gt;
+
+&lt;p&gt;$ git branch -D feature-vulcan
+Deleted branch feature-vulcan (was 756d4af).&lt;/p&gt;
+
+&lt;p&gt;推送分支&lt;/p&gt;
+
+&lt;p&gt;推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，Git就会把该分支推送到远程库对应的远程分支上：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git push origin master 如果要推送其他分支，比如dev，就改成：
+
+$ git push origin dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;推送分支&lt;/h2&gt;
+&lt;p&gt;但是，并不是一定要把本地分支往远程推送，那么，哪些分支需要推送，哪些不需要呢？&lt;/p&gt;
+
+&lt;p&gt;master分支是主分支，因此要时刻与远程同步；&lt;/p&gt;
+
+&lt;p&gt;dev分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；&lt;/p&gt;
+
+&lt;p&gt;bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；&lt;/p&gt;
+
+&lt;p&gt;feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。&lt;/p&gt;
+
+&lt;p&gt;总之，就是在Git中，分支完全可以在本地自己藏着玩，是否推送，视你的心情而定！&lt;/p&gt;
+
+&lt;h2 id=&quot;git-&quot;&gt;给git 命令改名字&lt;/h2&gt;
+&lt;p&gt;有没有经常敲错命令？比如git status？status这个单词真心不好记。&lt;/p&gt;
+
+&lt;p&gt;如果敲git st就表示git status那就简单多了，当然这种偷懒的办法我们是极力赞成的。&lt;/p&gt;
+
+&lt;p&gt;我们只需要敲一行命令，告诉Git，以后st就表示status：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git config --global alias.st status
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h5 id=&quot;log&quot;&gt;强大log&lt;/h5&gt;
+&lt;blockquote&gt;
+  &lt;pre&gt;&lt;code&gt;log --color --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&amp;lt;%an&amp;gt;%Creset&#39; --abbrev-commit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+
+</description>
+				<pubDate>Mon, 13 Jul 2015 00:00:00 +0800</pubDate>
+				<link>/2015/07/13/2%E5%AD%A6%E4%B9%A0git.html</link>
+				<guid isPermaLink="true">/2015/07/13/2%E5%AD%A6%E4%B9%A0git.html</guid>
+			</item>
+		
+			<item>
 				<title>iOS App性能优化</title>
 				<description>&lt;h2 id=&quot;ios-app&quot;&gt;iOS App的性能关注点&lt;/h2&gt;
 &lt;p&gt;虽然iPhone的机能越来越好，但是app的功能也越来越复杂，性能从来都是移动开发的核心关注点之一。我们说一个app性能好，不是简单指感觉运行速度快，而应该是指应用启动快速、UI反馈响应及时、列表滚动操作流畅、内存使用合理，当然更不能随随便便Crash啦。工程师开发应用时除了在设计上要避免性能“坑”的出现，在实际遇到“坑”时也要能很快定位原因所在。定位性能问题原因当然不能靠猜，合理的方法是使用工具测量评估出投资回报最高的问题点，然后再加以优化。&lt;/p&gt;
