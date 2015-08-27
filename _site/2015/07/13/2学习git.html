@@ -149,7 +149,59 @@
 	   2015
 	 </span>
 	  <div class="article_body">
-	  <p><code>git log --pretty=oneline</code>
+	  <h2 id="git">Git基本工作流程</h2>
+<p>在git版本控制的目录下修改某个文件
+使用git add命令对修改后的文件快照，保存到暂存区域
+使用git commit命令提交更新，将保存在暂存区域的文件快照永久转储到 Git 目录中
+##Git基本技巧
+* 自动补全
+* Git 命令别名
+关于具体如何使用自动补全和命名别名技巧，请查看Pro git的技巧和窍门</p>
+
+<h1 id="git-1">Git版本控制</h1>
+<p>git init
+git clone
+git config
+#保存修改
+git add
+git commit
+##查看仓库
+git status
+git log –oneline
+##撤销修改
+###查看之前的commit
+git checkout <commit> <file>
+git checkout <commit>
+git checkout <branch>
+###撤销公共修改
+git revert <commit>
+###撤销本地修改
+git reset
+git clean
+##重写Git历史记录
+git commit --amend
+git rebase
+git reflog
+##Git协作开发
+###分支
+git branch
+git checkout
+git merge
+##仓库同步
+git remote
+git fetch
+git pull
+git push
+##Git工作流
+由于git拥有强大的分支特性，它的工作流比较灵活而缺乏约束，于是参考Atlassian Git Tutorial的Comparing Workflows章节提供四种Git工作流：</commit></branch></commit></file></commit></p>
+
+<p>Centralized Workflow
+Feature Branch Workflow
+Gitflow Workflow
+Forking Workflow
+以上工作流只是参考指南，而不是具体规则。你可以根据自己实际情况来选择适合自己的工作流或微调来满足自己的需要。</p>
+
+<p><code>git log --pretty=oneline</code>
 输出简化版的日志信息</p>
 
 <blockquote>

@@ -7,6 +7,138 @@
 		<atom:link href="/" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>学习html</title>
+				<description>&lt;h1 id=&quot;html&quot;&gt;学习html&lt;/h1&gt;
+&lt;p&gt;###标签link&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;  
+	&amp;lt;head&amp;gt;  
+		&amp;lt;title&amp;gt;第一个Html文档&amp;lt;/title&amp;gt;
+	&amp;lt;/head&amp;gt;  
+	&amp;lt;body&amp;gt;  
+		欢迎访问&amp;lt;a href=&quot;http://kekeye.github.io&quot;叶斌的iOS Blog&amp;lt;/a&amp;gt;!  
+	&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;font&quot;&gt;font&lt;/h3&gt;
+
+&lt;p&gt;face 是字体   color是颜色  size是大小&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;font face=&quot;黑体&quot; color=&quot;blue&quot; size=&quot;30&quot;&amp;gt;叶斌 &amp;lt;br&amp;gt;&amp;lt;/font&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;加粗，下划线，斜体字也是常用的文字效果，它们分别用&lt;code&gt;&amp;lt;b&amp;gt; &amp;lt;u&amp;gt; &amp;lt;i&amp;gt;&lt;/code&gt;表示
+&lt;code&gt;&amp;lt;b&amp;gt;Bold&amp;lt;/b&amp;gt;&amp;lt;i&amp;gt;italic&amp;lt;/i&amp;gt;&amp;lt;u&amp;gt;underline&amp;lt;/u&amp;gt;	&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;标题&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;h1&amp;gt;HTML 30分钟教程&amp;lt;/h1&amp;gt;
+&amp;lt;h2&amp;gt;什么是HTML&amp;lt;/h2&amp;gt;
+...
+&amp;lt;h2&amp;gt;HTML是什么样的&amp;lt;/h2&amp;gt;
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;链接&lt;/h3&gt;
+&lt;hr /&gt;
+&lt;p&gt;标签用于在页面上添加横线。可以通过指定width和color属性来控制横线的长度和颜色。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;hr width=&quot;90%&quot; color=&quot;red&quot; /&amp;gt;	
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img /&gt;标签用于在页面上添加图片，src属性指定图片的地址，如果无法打开src指定的图片，浏览器通常会在页面上需要显示图片的地方显示alt属性定义的文本。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;img src=&quot;http://www.w3.org/Icons/valid-xhtml10&quot; alt=&quot;图片简介&quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;图片链接&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;a href=&quot;http://validator.w3.org&quot;&amp;gt;&amp;lt;img src=&quot;http://www.w3.org/Icons/valid-xhtml10&quot; alt=&quot;验证HTML&quot; /&amp;gt;&amp;lt;/a&amp;gt;	
+
+
+&amp;lt;a href=&quot;http://www.w3school.com.cn/&quot; target=&quot;_blank&quot;&amp;gt;Visit W3School!&amp;lt;/a&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;分段与换行&lt;/h3&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;表格&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;table&amp;gt;  
+&amp;lt;tr&amp;gt;
+&amp;lt;td&amp;gt;2000&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;悉尼&amp;lt;/td&amp;gt;  
+&amp;lt;/tr&amp;gt;
+ &amp;lt;tr&amp;gt;
+&amp;lt;td&amp;gt;2004&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;雅典&amp;lt;/td&amp;gt;  
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+&amp;lt;td&amp;gt;2008&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;北京&amp;lt;/td&amp;gt;  
+&amp;lt;/tr&amp;gt;
+&amp;lt;/table&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;section-4&quot;&gt;列表&lt;/h3&gt;
+&lt;p&gt;表格用于表示二维数据（行，列），一维数据则用列表表示。列表可以分为无序列表（&amp;lt;ul&amp;gt;），有序列表（&amp;lt;ol&amp;gt;）和定义列表（&amp;lt;dl&amp;gt;）。前两种列表更常见一些，都用&amp;lt;li&amp;gt;标签包含列表项目。
+无序列表表示一系列类似的项目，它们之间没有先后顺序&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;ul&amp;gt;  
+&amp;lt;li&amp;gt;苹果&amp;lt;/li&amp;gt;  
+&amp;lt;li&amp;gt;桔子&amp;lt;/li&amp;gt;  
+&amp;lt;li&amp;gt;桃&amp;lt;/li&amp;gt;  
+&amp;lt;/ul&amp;gt;  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有序列表中各个项目间的顺序是很重要的，浏览器通常会自动给它们产生编号。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;ol&amp;gt;
+&amp;lt;li&amp;gt;打开冰箱门&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;把大象赶进去&amp;lt;/li&amp;gt;
+&amp;lt;li&amp;gt;关上冰箱门&amp;lt;/li&amp;gt;
+&amp;lt;/ol&amp;gt;	
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;section-5&quot;&gt;框架&lt;/h3&gt;
+
+&lt;p&gt;最后谈一下框架，曾经非常流行的技术，框架使一个窗口里能同时显示多个文档。主框架页里面没有&amp;lt;body&amp;gt;标签，取代它的是&lt;frameset&gt;。&lt;/frameset&gt;&lt;/p&gt;
+&lt;frameset&gt;标签的属性Rows和Cols用于指定框架集(frameset)里有多少行（列），以及每行（列）的高度（宽度）。
+&lt;frameset&gt;标签可以包含&lt;frame&gt;标签，每个&lt;frame&gt;标签代表一个文档（src属性指定文档的地址）。
+如果觉得这样的页面还不够复杂的话，还可以在&lt;frameset&gt;标签里包含&lt;frameset&gt;标签。
+
+
+	&lt;frameset rows=&quot;15%,*&quot;&gt;
+     &amp;lt;frame src=&quot;top.html&quot; name=title scrolling=no&amp;gt;
+     &lt;frameset cols=&quot;20%,*&quot;&gt;
+          &amp;lt;frame src=&quot;left.html&quot; name=sidebar&amp;gt;
+          &amp;lt;frame src=&quot;right.html&quot; name=recipes&amp;gt;
+     &lt;/frameset&gt;
+	&lt;/frameset&gt;
+	
+	
+
+标签	描述
+&lt;b&gt;	定义粗体文本。
+&lt;big&gt;	定义大号字。
+&lt;em&gt;	定义着重文字。
+&lt;i&gt;	定义斜体字。
+&lt;small&gt;	定义小号字。
+&lt;strong&gt;	定义加重语气。
+&lt;sub&gt;	定义下标字。
+&lt;sup&gt;	定义上标字。
+&lt;ins&gt;	定义插入字。
+&lt;del&gt;	定义删除字。
+&lt;s&gt;	不赞成使用。使用 &lt;del&gt; 代替。
+&lt;strike&gt;	不赞成使用。使用 &lt;del&gt; 代替。
+&lt;u&gt;	不赞成使用。使用样式（style）代替。	
+	
+	
+&lt;/u&gt;&lt;/del&gt;&lt;/strike&gt;&lt;/del&gt;&lt;/s&gt;&lt;/del&gt;&lt;/ins&gt;&lt;/sup&gt;&lt;/sub&gt;&lt;/strong&gt;&lt;/small&gt;&lt;/i&gt;&lt;/em&gt;&lt;/big&gt;&lt;/b&gt;&lt;/frameset&gt;&lt;/frameset&gt;&lt;/frame&gt;&lt;/frame&gt;&lt;/frameset&gt;&lt;/frameset&gt;
+</description>
+				<pubDate>Sun, 09 Aug 2015 00:00:00 +0800</pubDate>
+				<link>/2015/08/09/0%E5%AD%A6%E4%B9%A0Html.html</link>
+				<guid isPermaLink="true">/2015/08/09/0%E5%AD%A6%E4%B9%A0Html.html</guid>
+			</item>
+		
+			<item>
 				<title>runtime</title>
 				<description>&lt;h1 id=&quot;runtime&quot;&gt;runtime&lt;/h1&gt;
 &lt;p&gt;Objective-C是基于C语言加入了面向对象特性和消息转发机制的动态语言，这意味着它不仅需要一个编译器，还需要Runtime系统来动态创建类和对象，进行消息发送和转发。下面通过分析Apple开源的Runtime代码来深入理解Objective-C的Runtime机制。&lt;/p&gt;
@@ -169,41 +301,45 @@ typedef struct objc_method *Method;&lt;/p&gt;
 &lt;p&gt;Ivar
 Ivar表示类中的实例变量，在runtime.h文件中找到它的定义：&lt;/p&gt;
 
-&lt;p&gt;/// An opaque type that represents an instance variable.
-typedef struct objc_ivar *Ivar;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// An opaque type that represents an instance variable.
+typedef struct objc_ivar *Ivar;
 
-&lt;p&gt;struct objc_ivar {
-    char *ivar_name                                          OBJC2_UNAVAILABLE;
-    char *ivar_type                                          OBJC2_UNAVAILABLE;
-    int ivar_offset                                          OBJC2_UNAVAILABLE;
-#ifdef &lt;strong&gt;LP64&lt;/strong&gt;
-    int space                                                OBJC2_UNAVAILABLE;
+struct objc_ivar {
+char *ivar_name                                          OBJC2_UNAVAILABLE;
+char *ivar_type                                          OBJC2_UNAVAILABLE;
+int ivar_offset                                          OBJC2_UNAVAILABLE;
+#ifdef __LP64__
+int space                                                OBJC2_UNAVAILABLE;
 #endif
 }
-Ivar其实就是一个指向objc_ivar结构体指针，它包含了变量名(ivar_name)、变量类型(ivar_type)等信息。&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;Ivar&lt;/code&gt;其实就是一个指向&lt;code&gt;objc_ivar&lt;/code&gt;结构体指针，它包含了变量名&lt;code&gt;(ivar_name)&lt;/code&gt;、变量类型(ivar_type)等信息。&lt;/p&gt;
 
 &lt;p&gt;IMP
 在上面讲Method时就说过，IMP本质上就是一个函数指针，指向方法的实现，在objc.h找到它的定义：&lt;/p&gt;
 
-&lt;p&gt;/// A pointer to the function of a method implementation. 
+&lt;pre&gt;&lt;code&gt;/// A pointer to the function of a method implementation. 
 #if !OBJC_OLD_DISPATCH_PROTOTYPES
-typedef void (&lt;em&gt;IMP)(void /&lt;/em&gt; id, SEL, … &lt;em&gt;/ ); 
+typedef void (*IMP)(void /* id, SEL, ... */ ); 
 #else
-typedef id (&lt;/em&gt;IMP)(id, SEL, …); 
+typedef id (*IMP)(id, SEL, ...); 
 #endif
-当你向某个对象发送一条信息，可以由这个函数指针来指定方法的实现，它最终就会执行那段代码，这样可以绕开消息传递阶段而去执行另一个方法实现。&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当你向某个对象发送一条信息，可以由这个函数指针来指定方法的实现，它最终就会执行那段代码，这样可以绕开消息传递阶段而去执行另一个方法实现。&lt;/p&gt;
 
 &lt;p&gt;Cache
 顾名思义，Cache主要用来缓存，那它缓存什么呢？我们先在runtime.h文件看看它的定义：&lt;/p&gt;
 
-&lt;p&gt;typedef struct objc_cache *Cache                             OBJC2_UNAVAILABLE;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;typedef struct objc_cache *Cache                             OBJC2_UNAVAILABLE;
 
-&lt;p&gt;struct objc_cache {
-    unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
-    unsigned int occupied                                    OBJC2_UNAVAILABLE;
-    Method buckets[1]                                        OBJC2_UNAVAILABLE;
-};
-Cache其实就是一个存储Method的链表，主要是为了优化方法调用的性能。当对象receiver调用方法message时，首先根据对象receiver的isa指针查找到它对应的类，然后在类的methodLists中搜索方法，如果没有找到，就使用super_class指针到父类中的methodLists查找，一旦找到就调用方法。如果没有找到，有可能消息转发，也可能忽略它。但这样查找方式效率太低，因为往往一个类大概只有20%的方法经常被调用，占总调用次数的80%。所以使用Cache来缓存经常调用的方法，当调用方法时，优先在Cache查找，如果没有找到，再到methodLists查找。&lt;/p&gt;
+struct objc_cache {
+unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
+unsigned int occupied                                    OBJC2_UNAVAILABLE;
+Method buckets[1]                                        OBJC2_UNAVAILABLE;
+}; Cache其实就是一个存储Method的链表，主要是为了优化方法调用的性能。当对象receiver调用方法message时，首先根据对象receiver的isa指针查找到它对应的类，然后在类的methodLists中搜索方法，如果没有找到，就使用super_class指针到父类中的methodLists查找，一旦找到就调用方法。如果没有找到，有可能消息转发，也可能忽略它。但这样查找方式效率太低，因为往往一个类大概只有20%的方法经常被调用，占总调用次数的80%。所以使用Cache来缓存经常调用的方法，当调用方法时，优先在Cache查找，如果没有找到，再到methodLists查找。
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;消息发送
 前面从objc_msgSend作为入口，逐步深入分析Runtime的数据结构，了解每个数据结构的作用和它们之间关系后，我们正式转入消息发送这个正题。&lt;/p&gt;
@@ -211,7 +347,7 @@ Cache其实就是一个存储Method的链表，主要是为了优化方法调用
 &lt;p&gt;objc_msgSend函数
 在前面已经提过，当某个对象使用语法[receiver message]来调用某个方法时，其实[receiver message]被编译器转化为:&lt;/p&gt;
 
-&lt;p&gt;id objc_msgSend ( id self, SEL op, … );
+&lt;p&gt;&lt;code&gt;id objc_msgSend ( id self, SEL op, ... );&lt;/code&gt;
 现在让我们看一下objc_msgSend它具体是如何发送消息:&lt;/p&gt;
 
 &lt;p&gt;首先根据receiver对象的isa指针获取它对应的class
@@ -223,47 +359,50 @@ Cache其实就是一个存储Method的链表，主要是为了优化方法调用
 self与super
 为了让大家更好地理解self和super，借用sunnyxx博客的ios程序员6级考试一道题目：下面的代码分别输出什么？&lt;/p&gt;
 
-&lt;p&gt;@implementation Son : Father
+&lt;pre&gt;&lt;code&gt;@implementation Son : Father
 - (id)init
 {
-    self = [super init];
-    if (self)
-    {
-        NSLog(@”%@”, NSStringFromClass([self class]));
-        NSLog(@”%@”, NSStringFromClass([super class]));
-    }
-    return self;
+self = [super init];
+if (self)
+{
+    NSLog(@&quot;%@&quot;, NSStringFromClass([self class]));
+    NSLog(@&quot;%@&quot;, NSStringFromClass([super class]));
 }
-@end
-self表示当前这个类的对象，而super是一个编译器标示符，和self指向同一个消息接受者。在本例中，无论是[self class]还是[super class]，接受消息者都是Son对象，但super与self不同的是，self调用class方法时，是在子类Son中查找方法，而super调用class方法时，是在父类Father中查找方法。&lt;/p&gt;
+return self;
+}
+@end self表示当前这个类的对象，而super是一个编译器标示符，和self指向同一个消息接受者。在本例中，无论是[self class]还是[super class]，接受消息者都是Son对象，但super与self不同的是，self调用class方法时，是在子类Son中查找方法，而super调用class方法时，是在父类Father中查找方法。
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;当调用[self class]方法时，会转化为objc_msgSend函数，这个函数定义如下：&lt;/p&gt;
 
-&lt;p&gt;id objc_msgSend(id self, SEL op, …)
+&lt;p&gt;&lt;code&gt;id objc_msgSend(id self, SEL op, ...)&lt;/code&gt;
 这时会从当前Son类的方法列表中查找，如果没有，就到Father类查找，还是没有，最后在NSObject类查找到。我们可以从NSObject.mm文件中看到- (Class)class的实现：&lt;/p&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;(Class)class {
-  return object_getClass(self);
-}
-所以NSLog(@”%@”, NSStringFromClass([self class]));会输出Son。&lt;/li&gt;
-&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;- (Class)class {
+return object_getClass(self);
+} 所以`NSLog(@&quot;%@&quot;, NSStringFromClass([self class]));`会输出Son。
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;当调用[super class]方法时，会转化为objc_msgSendSuper，这个函数定义如下：&lt;/p&gt;
 
-&lt;p&gt;id objc_msgSendSuper(struct objc_super *super, SEL op, …)
+&lt;p&gt;&lt;code&gt;id objc_msgSendSuper(struct objc_super *super, SEL op, ...)&lt;/code&gt;
 objc_msgSendSuper函数第一个参数super的数据类型是一个指向objc_super的结构体，从message.h文件中查看它的定义：&lt;/p&gt;
 
-&lt;p&gt;/// Specifies the superclass of an instance. 
+&lt;pre&gt;&lt;code&gt;/// Specifies the superclass of an instance. 
 struct objc_super {
-    /// Specifies an instance of a class.
-    __unsafe_unretained id receiver;&lt;/p&gt;
+/// Specifies an instance of a class.
+__unsafe_unretained id receiver;
 
-&lt;pre&gt;&lt;code&gt;/// Specifies the particular superclass of the instance to message.  #if !defined(__cplusplus)  &amp;amp;&amp;amp;  !__OBJC2__
+/// Specifies the particular superclass of the instance to message. 
+#if !defined(__cplusplus)  &amp;amp;&amp;amp;  !__OBJC2__
 /* For compatibility with old objc-runtime.h header */
-__unsafe_unretained Class class; #else
-__unsafe_unretained Class super_class; #endif
-/* super_class is the first class to search */ }; #endif 结构体包含两个成员，第一个是receiver，表示某个类的实例。第二个是super_class表示当前类的父类。
+__unsafe_unretained Class class;
+#else
+__unsafe_unretained Class super_class;
+#endif
+/* super_class is the first class to search */
+};
+#endif 结构体包含两个成员，第一个是receiver，表示某个类的实例。第二个是super_class表示当前类的父类。
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;这时首先会构造出objc_super结构体，这个结构体第一个成员是self，第二个成员是(id)class_getSuperclass(objc_getClass(“Son”))，实际上该函数会输出Father。然后在Father类查找class方法，查找不到，最后在NSObject查到。此时，内部使用objc_msgSend(objc_super-&amp;gt;receiver, @selector(class))去调用，与[self class]调用相同，所以结果还是Son。&lt;/p&gt;
@@ -286,52 +425,44 @@ Method Resolution
 
 &lt;p&gt;举一个简单例子，定义一个类Message，它主要定义一个方法sendMessage，下面就是它的设计与实现：&lt;/p&gt;
 
-&lt;p&gt;@interface Message : NSObject&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;@interface Message : NSObject
 
-&lt;ul&gt;
-  &lt;li&gt;(void)sendMessage:(NSString *)word;&lt;/li&gt;
-&lt;/ul&gt;
+- (void)sendMessage:(NSString *)word;
 
-&lt;p&gt;@end
-@implementation Message&lt;/p&gt;
+@end
+@implementation Message
 
-&lt;ul&gt;
-  &lt;li&gt;(void)sendMessage:(NSString *)word
+- (void)sendMessage:(NSString *)word
 {
-  NSLog(@”normal way : send message = %@”, word);
-}&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;@end
-如果我在viewDidLoad方法中创建Message对象并调用sendMessage方法：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;(void)viewDidLoad {
-  [super viewDidLoad];&lt;/p&gt;
-
-    &lt;p&gt;Message *message = [Message new];
-  [message sendMessage:@”Sam Lau”];
+	NSLog(@&quot;normal way : send message = %@&quot;, word);
 }
-控制台会打印以下信息:&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
+
+@end 如果我在viewDidLoad方法中创建Message对象并调用sendMessage方法：
+
+- (void)viewDidLoad {
+[super viewDidLoad];
+
+Message *message = [Message new];
+[message sendMessage:@&quot;Sam Lau&quot;];
+} 控制台会打印以下信息:
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;normal way : send message = Sam Lau
 但现在我将原来sendMessage方法实现给注释掉，覆盖resolveInstanceMethod方法：&lt;/p&gt;
 
-&lt;h1 id=&quot;pragma-mark---method-resolution&quot;&gt;pragma mark - Method Resolution&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;#pragma mark - Method Resolution
 
-&lt;p&gt;/// override resolveInstanceMethod or resolveClassMethod for changing sendMessage method implementation
+/// override resolveInstanceMethod or resolveClassMethod for changing sendMessage method implementation
 + (BOOL)resolveInstanceMethod:(SEL)sel
 {
-    if (sel == @selector(sendMessage:)) {
-        class_addMethod([self class], sel, imp_implementationWithBlock(^(id self, NSString &lt;em&gt;word) {
-            NSLog(@”method resolution way : send message = %@”, word);
-        }), “v@&lt;/em&gt;”);
-    }&lt;/p&gt;
+if (sel == @selector(sendMessage:)) {
+    class_addMethod([self class], sel, imp_implementationWithBlock(^(id self, NSString *word) {
+        NSLog(@&quot;method resolution way : send message = %@&quot;, word);
+    }), &quot;v@*&quot;);
+}
 
-&lt;pre&gt;&lt;code&gt;return YES; } 控制台就会打印以下信息：
+return YES;
+} 控制台就会打印以下信息：
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;method resolution way : send message = Sam Lau
@@ -344,20 +475,16 @@ Method Resolution
 
 &lt;p&gt;继续上面Message类的例子，将sendMessage和resolveInstanceMethod方法注释掉，然后添加forwardingTargetForSelector方法的实现：&lt;/p&gt;
 
-&lt;h1 id=&quot;pragma-mark---fast-forwarding&quot;&gt;pragma mark - Fast Forwarding&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;(id)forwardingTargetForSelector:(SEL)aSelector
+&lt;pre&gt;&lt;code&gt;#pragma mark - Fast Forwarding
+- (id)forwardingTargetForSelector:(SEL)aSelector
 {
-  if (aSelector == @selector(sendMessage:)) {
-      return [MessageForwarding new];
-  }&lt;/p&gt;
-
-    &lt;p&gt;return nil;
+if (aSelector == @selector(sendMessage:)) {
+    return [MessageForwarding new];
 }
-此时还缺一个转发消息的类MessageForwarding，这个类的设计与实现如下：&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
+
+return nil;
+} 此时还缺一个转发消息的类MessageForwarding，这个类的设计与实现如下：
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;@interface MessageForwarding : NSObject&lt;/p&gt;
 
@@ -468,16 +595,16 @@ NSObject+AssociatedObject.m
 &lt;p&gt;@end
 Associated Objects的key要求是唯一并且是常量，而SEL是满足这个要求的，所以上面的采用隐藏参数_cmd作为key。&lt;/p&gt;
 
-&lt;p&gt;Method Swizzling
-Method Swizzling就是在运行时将一个方法的实现代替为另一个方法的实现。如果能够利用好这个技巧，可以写出简洁、有效且维护性更好的代码。可以参考两篇关于Method Swizzling技巧的文章：&lt;/p&gt;
+&lt;h2 id=&quot;method-swizzling&quot;&gt;Method Swizzling&lt;/h2&gt;
+&lt;p&gt;Method Swizzling就是在运行时将一个方法的实现代替为另一个方法的实现。如果能够利用好这个技巧，可以写出简洁、有效且维护性更好的代码。可以参考两篇关于Method Swizzling技巧的文章：&lt;/p&gt;
 
 &lt;p&gt;nshipster Method Swizzling
 Method Swizzling 和 AOP 实践
 Aspect-Oriented Programming(AOP)
 类似记录日志、身份验证、缓存等事务非常琐碎，与业务逻辑无关，很多地方都有，又很难抽象出一个模块，这种程序设计问题，业界给它们起了一个名字叫横向关注点(Cross-cutting concern)，AOP作用就是分离横向关注点(Cross-cutting concern)来提高模块复用性，它可以在既有的代码添加一些额外的行为(记录日志、身份验证、缓存)而无需修改代码。&lt;/p&gt;
 
-&lt;p&gt;危险性
-Method Swizzling就像一把瑞士小刀，如果使用得当，它会有效地解决问题。但使用不当，将带来很多麻烦。在stackoverflow上有人已经提出这样一个问题：What are the Dangers of Method Swizzling in Objective C?，它的危险性主要体现以下几个方面：&lt;/p&gt;
+&lt;h2 id=&quot;section&quot;&gt;危险性&lt;/h2&gt;
+&lt;p&gt;Method Swizzling就像一把瑞士小刀，如果使用得当，它会有效地解决问题。但使用不当，将带来很多麻烦。在stackoverflow上有人已经提出这样一个问题：What are the Dangers of Method Swizzling in Objective C?，它的危险性主要体现以下几个方面：&lt;/p&gt;
 
 &lt;p&gt;Method swizzling is not atomic
 Changes behavior of un-owned code
@@ -486,7 +613,7 @@ Swizzling changes the method’s arguments
 The order of swizzles matters
 Difficult to understand (looks recursive)
 Difficult to debug
-总结
+#总结
 虽然在平时项目不是经常用到Objective-C的Runtime特性，但当你阅读一些iOS开源项目时，你就会发现很多时候都会用到。所以深入理解Objective-C的Runtime数据结构、消息转发机制有助于你更容易地阅读和学习开源项目。&lt;/p&gt;
 </description>
 				<pubDate>Fri, 07 Aug 2015 00:00:00 +0800</pubDate>
@@ -496,7 +623,59 @@ Difficult to debug
 		
 			<item>
 				<title>学习git</title>
-				<description>&lt;p&gt;&lt;code&gt;git log --pretty=oneline&lt;/code&gt;
+				<description>&lt;h2 id=&quot;git&quot;&gt;Git基本工作流程&lt;/h2&gt;
+&lt;p&gt;在git版本控制的目录下修改某个文件
+使用git add命令对修改后的文件快照，保存到暂存区域
+使用git commit命令提交更新，将保存在暂存区域的文件快照永久转储到 Git 目录中
+##Git基本技巧
+* 自动补全
+* Git 命令别名
+关于具体如何使用自动补全和命名别名技巧，请查看Pro git的技巧和窍门&lt;/p&gt;
+
+&lt;h1 id=&quot;git-1&quot;&gt;Git版本控制&lt;/h1&gt;
+&lt;p&gt;git init
+git clone
+git config
+#保存修改
+git add
+git commit
+##查看仓库
+git status
+git log –oneline
+##撤销修改
+###查看之前的commit
+git checkout &lt;commit&gt; &lt;file&gt;
+git checkout &lt;commit&gt;
+git checkout &lt;branch&gt;
+###撤销公共修改
+git revert &lt;commit&gt;
+###撤销本地修改
+git reset
+git clean
+##重写Git历史记录
+git commit --amend
+git rebase
+git reflog
+##Git协作开发
+###分支
+git branch
+git checkout
+git merge
+##仓库同步
+git remote
+git fetch
+git pull
+git push
+##Git工作流
+由于git拥有强大的分支特性，它的工作流比较灵活而缺乏约束，于是参考Atlassian Git Tutorial的Comparing Workflows章节提供四种Git工作流：&lt;/commit&gt;&lt;/branch&gt;&lt;/commit&gt;&lt;/file&gt;&lt;/commit&gt;&lt;/p&gt;
+
+&lt;p&gt;Centralized Workflow
+Feature Branch Workflow
+Gitflow Workflow
+Forking Workflow
+以上工作流只是参考指南，而不是具体规则。你可以根据自己实际情况来选择适合自己的工作流或微调来满足自己的需要。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;git log --pretty=oneline&lt;/code&gt;
 输出简化版的日志信息&lt;/p&gt;
 
 &lt;blockquote&gt;

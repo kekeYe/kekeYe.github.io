@@ -310,41 +310,45 @@ typedef struct objc_method *Method;</p>
 <p>Ivar
 Ivar表示类中的实例变量，在runtime.h文件中找到它的定义：</p>
 
-<p>/// An opaque type that represents an instance variable.
-typedef struct objc_ivar *Ivar;</p>
+<pre><code>/// An opaque type that represents an instance variable.
+typedef struct objc_ivar *Ivar;
 
-<p>struct objc_ivar {
-    char *ivar_name                                          OBJC2_UNAVAILABLE;
-    char *ivar_type                                          OBJC2_UNAVAILABLE;
-    int ivar_offset                                          OBJC2_UNAVAILABLE;
-#ifdef <strong>LP64</strong>
-    int space                                                OBJC2_UNAVAILABLE;
+struct objc_ivar {
+char *ivar_name                                          OBJC2_UNAVAILABLE;
+char *ivar_type                                          OBJC2_UNAVAILABLE;
+int ivar_offset                                          OBJC2_UNAVAILABLE;
+#ifdef __LP64__
+int space                                                OBJC2_UNAVAILABLE;
 #endif
 }
-Ivar其实就是一个指向objc_ivar结构体指针，它包含了变量名(ivar_name)、变量类型(ivar_type)等信息。</p>
+</code></pre>
+
+<p><code>Ivar</code>其实就是一个指向<code>objc_ivar</code>结构体指针，它包含了变量名<code>(ivar_name)</code>、变量类型(ivar_type)等信息。</p>
 
 <p>IMP
 在上面讲Method时就说过，IMP本质上就是一个函数指针，指向方法的实现，在objc.h找到它的定义：</p>
 
-<p>/// A pointer to the function of a method implementation. 
+<pre><code>/// A pointer to the function of a method implementation. 
 #if !OBJC_OLD_DISPATCH_PROTOTYPES
-typedef void (<em>IMP)(void /</em> id, SEL, … <em>/ ); 
+typedef void (*IMP)(void /* id, SEL, ... */ ); 
 #else
-typedef id (</em>IMP)(id, SEL, …); 
+typedef id (*IMP)(id, SEL, ...); 
 #endif
-当你向某个对象发送一条信息，可以由这个函数指针来指定方法的实现，它最终就会执行那段代码，这样可以绕开消息传递阶段而去执行另一个方法实现。</p>
+</code></pre>
+
+<p>当你向某个对象发送一条信息，可以由这个函数指针来指定方法的实现，它最终就会执行那段代码，这样可以绕开消息传递阶段而去执行另一个方法实现。</p>
 
 <p>Cache
 顾名思义，Cache主要用来缓存，那它缓存什么呢？我们先在runtime.h文件看看它的定义：</p>
 
-<p>typedef struct objc_cache *Cache                             OBJC2_UNAVAILABLE;</p>
+<pre><code>typedef struct objc_cache *Cache                             OBJC2_UNAVAILABLE;
 
-<p>struct objc_cache {
-    unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
-    unsigned int occupied                                    OBJC2_UNAVAILABLE;
-    Method buckets[1]                                        OBJC2_UNAVAILABLE;
-};
-Cache其实就是一个存储Method的链表，主要是为了优化方法调用的性能。当对象receiver调用方法message时，首先根据对象receiver的isa指针查找到它对应的类，然后在类的methodLists中搜索方法，如果没有找到，就使用super_class指针到父类中的methodLists查找，一旦找到就调用方法。如果没有找到，有可能消息转发，也可能忽略它。但这样查找方式效率太低，因为往往一个类大概只有20%的方法经常被调用，占总调用次数的80%。所以使用Cache来缓存经常调用的方法，当调用方法时，优先在Cache查找，如果没有找到，再到methodLists查找。</p>
+struct objc_cache {
+unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
+unsigned int occupied                                    OBJC2_UNAVAILABLE;
+Method buckets[1]                                        OBJC2_UNAVAILABLE;
+}; Cache其实就是一个存储Method的链表，主要是为了优化方法调用的性能。当对象receiver调用方法message时，首先根据对象receiver的isa指针查找到它对应的类，然后在类的methodLists中搜索方法，如果没有找到，就使用super_class指针到父类中的methodLists查找，一旦找到就调用方法。如果没有找到，有可能消息转发，也可能忽略它。但这样查找方式效率太低，因为往往一个类大概只有20%的方法经常被调用，占总调用次数的80%。所以使用Cache来缓存经常调用的方法，当调用方法时，优先在Cache查找，如果没有找到，再到methodLists查找。
+</code></pre>
 
 <p>消息发送
 前面从objc_msgSend作为入口，逐步深入分析Runtime的数据结构，了解每个数据结构的作用和它们之间关系后，我们正式转入消息发送这个正题。</p>
@@ -352,7 +356,7 @@ Cache其实就是一个存储Method的链表，主要是为了优化方法调用
 <p>objc_msgSend函数
 在前面已经提过，当某个对象使用语法[receiver message]来调用某个方法时，其实[receiver message]被编译器转化为:</p>
 
-<p>id objc_msgSend ( id self, SEL op, … );
+<p><code>id objc_msgSend ( id self, SEL op, ... );</code>
 现在让我们看一下objc_msgSend它具体是如何发送消息:</p>
 
 <p>首先根据receiver对象的isa指针获取它对应的class
@@ -364,47 +368,50 @@ Cache其实就是一个存储Method的链表，主要是为了优化方法调用
 self与super
 为了让大家更好地理解self和super，借用sunnyxx博客的ios程序员6级考试一道题目：下面的代码分别输出什么？</p>
 
-<p>@implementation Son : Father
+<pre><code>@implementation Son : Father
 - (id)init
 {
-    self = [super init];
-    if (self)
-    {
-        NSLog(@”%@”, NSStringFromClass([self class]));
-        NSLog(@”%@”, NSStringFromClass([super class]));
-    }
-    return self;
+self = [super init];
+if (self)
+{
+    NSLog(@"%@", NSStringFromClass([self class]));
+    NSLog(@"%@", NSStringFromClass([super class]));
 }
-@end
-self表示当前这个类的对象，而super是一个编译器标示符，和self指向同一个消息接受者。在本例中，无论是[self class]还是[super class]，接受消息者都是Son对象，但super与self不同的是，self调用class方法时，是在子类Son中查找方法，而super调用class方法时，是在父类Father中查找方法。</p>
+return self;
+}
+@end self表示当前这个类的对象，而super是一个编译器标示符，和self指向同一个消息接受者。在本例中，无论是[self class]还是[super class]，接受消息者都是Son对象，但super与self不同的是，self调用class方法时，是在子类Son中查找方法，而super调用class方法时，是在父类Father中查找方法。
+</code></pre>
 
 <p>当调用[self class]方法时，会转化为objc_msgSend函数，这个函数定义如下：</p>
 
-<p>id objc_msgSend(id self, SEL op, …)
+<p><code>id objc_msgSend(id self, SEL op, ...)</code>
 这时会从当前Son类的方法列表中查找，如果没有，就到Father类查找，还是没有，最后在NSObject类查找到。我们可以从NSObject.mm文件中看到- (Class)class的实现：</p>
 
-<ul>
-  <li>(Class)class {
-  return object_getClass(self);
-}
-所以NSLog(@”%@”, NSStringFromClass([self class]));会输出Son。</li>
-</ul>
+<pre><code>- (Class)class {
+return object_getClass(self);
+} 所以`NSLog(@"%@", NSStringFromClass([self class]));`会输出Son。
+</code></pre>
 
 <p>当调用[super class]方法时，会转化为objc_msgSendSuper，这个函数定义如下：</p>
 
-<p>id objc_msgSendSuper(struct objc_super *super, SEL op, …)
+<p><code>id objc_msgSendSuper(struct objc_super *super, SEL op, ...)</code>
 objc_msgSendSuper函数第一个参数super的数据类型是一个指向objc_super的结构体，从message.h文件中查看它的定义：</p>
 
-<p>/// Specifies the superclass of an instance. 
+<pre><code>/// Specifies the superclass of an instance. 
 struct objc_super {
-    /// Specifies an instance of a class.
-    __unsafe_unretained id receiver;</p>
+/// Specifies an instance of a class.
+__unsafe_unretained id receiver;
 
-<pre><code>/// Specifies the particular superclass of the instance to message.  #if !defined(__cplusplus)  &amp;&amp;  !__OBJC2__
+/// Specifies the particular superclass of the instance to message. 
+#if !defined(__cplusplus)  &amp;&amp;  !__OBJC2__
 /* For compatibility with old objc-runtime.h header */
-__unsafe_unretained Class class; #else
-__unsafe_unretained Class super_class; #endif
-/* super_class is the first class to search */ }; #endif 结构体包含两个成员，第一个是receiver，表示某个类的实例。第二个是super_class表示当前类的父类。
+__unsafe_unretained Class class;
+#else
+__unsafe_unretained Class super_class;
+#endif
+/* super_class is the first class to search */
+};
+#endif 结构体包含两个成员，第一个是receiver，表示某个类的实例。第二个是super_class表示当前类的父类。
 </code></pre>
 
 <p>这时首先会构造出objc_super结构体，这个结构体第一个成员是self，第二个成员是(id)class_getSuperclass(objc_getClass(“Son”))，实际上该函数会输出Father。然后在Father类查找class方法，查找不到，最后在NSObject查到。此时，内部使用objc_msgSend(objc_super-&gt;receiver, @selector(class))去调用，与[self class]调用相同，所以结果还是Son。</p>
@@ -427,52 +434,44 @@ Method Resolution
 
 <p>举一个简单例子，定义一个类Message，它主要定义一个方法sendMessage，下面就是它的设计与实现：</p>
 
-<p>@interface Message : NSObject</p>
+<pre><code>@interface Message : NSObject
 
-<ul>
-  <li>(void)sendMessage:(NSString *)word;</li>
-</ul>
+- (void)sendMessage:(NSString *)word;
 
-<p>@end
-@implementation Message</p>
+@end
+@implementation Message
 
-<ul>
-  <li>(void)sendMessage:(NSString *)word
+- (void)sendMessage:(NSString *)word
 {
-  NSLog(@”normal way : send message = %@”, word);
-}</li>
-</ul>
-
-<p>@end
-如果我在viewDidLoad方法中创建Message对象并调用sendMessage方法：</p>
-
-<ul>
-  <li>
-    <p>(void)viewDidLoad {
-  [super viewDidLoad];</p>
-
-    <p>Message *message = [Message new];
-  [message sendMessage:@”Sam Lau”];
+	NSLog(@"normal way : send message = %@", word);
 }
-控制台会打印以下信息:</p>
-  </li>
-</ul>
+
+@end 如果我在viewDidLoad方法中创建Message对象并调用sendMessage方法：
+
+- (void)viewDidLoad {
+[super viewDidLoad];
+
+Message *message = [Message new];
+[message sendMessage:@"Sam Lau"];
+} 控制台会打印以下信息:
+</code></pre>
 
 <p>normal way : send message = Sam Lau
 但现在我将原来sendMessage方法实现给注释掉，覆盖resolveInstanceMethod方法：</p>
 
-<h1 id="pragma-mark---method-resolution">pragma mark - Method Resolution</h1>
+<pre><code>#pragma mark - Method Resolution
 
-<p>/// override resolveInstanceMethod or resolveClassMethod for changing sendMessage method implementation
+/// override resolveInstanceMethod or resolveClassMethod for changing sendMessage method implementation
 + (BOOL)resolveInstanceMethod:(SEL)sel
 {
-    if (sel == @selector(sendMessage:)) {
-        class_addMethod([self class], sel, imp_implementationWithBlock(^(id self, NSString <em>word) {
-            NSLog(@”method resolution way : send message = %@”, word);
-        }), “v@</em>”);
-    }</p>
+if (sel == @selector(sendMessage:)) {
+    class_addMethod([self class], sel, imp_implementationWithBlock(^(id self, NSString *word) {
+        NSLog(@"method resolution way : send message = %@", word);
+    }), "v@*");
+}
 
-<pre><code>return YES; } 控制台就会打印以下信息：
+return YES;
+} 控制台就会打印以下信息：
 </code></pre>
 
 <p>method resolution way : send message = Sam Lau
@@ -485,20 +484,16 @@ Method Resolution
 
 <p>继续上面Message类的例子，将sendMessage和resolveInstanceMethod方法注释掉，然后添加forwardingTargetForSelector方法的实现：</p>
 
-<h1 id="pragma-mark---fast-forwarding">pragma mark - Fast Forwarding</h1>
-<ul>
-  <li>
-    <p>(id)forwardingTargetForSelector:(SEL)aSelector
+<pre><code>#pragma mark - Fast Forwarding
+- (id)forwardingTargetForSelector:(SEL)aSelector
 {
-  if (aSelector == @selector(sendMessage:)) {
-      return [MessageForwarding new];
-  }</p>
-
-    <p>return nil;
+if (aSelector == @selector(sendMessage:)) {
+    return [MessageForwarding new];
 }
-此时还缺一个转发消息的类MessageForwarding，这个类的设计与实现如下：</p>
-  </li>
-</ul>
+
+return nil;
+} 此时还缺一个转发消息的类MessageForwarding，这个类的设计与实现如下：
+</code></pre>
 
 <p>@interface MessageForwarding : NSObject</p>
 
@@ -609,16 +604,16 @@ NSObject+AssociatedObject.m
 <p>@end
 Associated Objects的key要求是唯一并且是常量，而SEL是满足这个要求的，所以上面的采用隐藏参数_cmd作为key。</p>
 
-<p>Method Swizzling
-Method Swizzling就是在运行时将一个方法的实现代替为另一个方法的实现。如果能够利用好这个技巧，可以写出简洁、有效且维护性更好的代码。可以参考两篇关于Method Swizzling技巧的文章：</p>
+<h2 id="method-swizzling">Method Swizzling</h2>
+<p>Method Swizzling就是在运行时将一个方法的实现代替为另一个方法的实现。如果能够利用好这个技巧，可以写出简洁、有效且维护性更好的代码。可以参考两篇关于Method Swizzling技巧的文章：</p>
 
 <p>nshipster Method Swizzling
 Method Swizzling 和 AOP 实践
 Aspect-Oriented Programming(AOP)
 类似记录日志、身份验证、缓存等事务非常琐碎，与业务逻辑无关，很多地方都有，又很难抽象出一个模块，这种程序设计问题，业界给它们起了一个名字叫横向关注点(Cross-cutting concern)，AOP作用就是分离横向关注点(Cross-cutting concern)来提高模块复用性，它可以在既有的代码添加一些额外的行为(记录日志、身份验证、缓存)而无需修改代码。</p>
 
-<p>危险性
-Method Swizzling就像一把瑞士小刀，如果使用得当，它会有效地解决问题。但使用不当，将带来很多麻烦。在stackoverflow上有人已经提出这样一个问题：What are the Dangers of Method Swizzling in Objective C?，它的危险性主要体现以下几个方面：</p>
+<h2 id="section">危险性</h2>
+<p>Method Swizzling就像一把瑞士小刀，如果使用得当，它会有效地解决问题。但使用不当，将带来很多麻烦。在stackoverflow上有人已经提出这样一个问题：What are the Dangers of Method Swizzling in Objective C?，它的危险性主要体现以下几个方面：</p>
 
 <p>Method swizzling is not atomic
 Changes behavior of un-owned code
@@ -627,7 +622,7 @@ Swizzling changes the method’s arguments
 The order of swizzles matters
 Difficult to understand (looks recursive)
 Difficult to debug
-总结
+#总结
 虽然在平时项目不是经常用到Objective-C的Runtime特性，但当你阅读一些iOS开源项目时，你就会发现很多时候都会用到。所以深入理解Objective-C的Runtime数据结构、消息转发机制有助于你更容易地阅读和学习开源项目。</p>
 
 	  </div>
@@ -672,7 +667,7 @@ Difficult to debug
 		  <li class="previous"><a href="/2015/07/13/2%E5%AD%A6%E4%B9%A0git.html" title="学习git">&larr; Previous</a></li>
 		  
 		  
-			<li class="next disabled"><a>Next &rarr;</a>
+		  <li class="next"><a href="/2015/08/09/0%E5%AD%A6%E4%B9%A0Html.html" title="学习html">Next &rarr;</a></li>
 		  
 		</ul>
 
